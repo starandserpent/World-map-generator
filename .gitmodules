@@ -1,0 +1,3 @@
+[submodule "modules/Weltschmerz"]
+	path = modules/Weltschmerz
+	url = git@github.com:starandserpent/Weltschmerz.git
