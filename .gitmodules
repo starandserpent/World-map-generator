@@ -1,3 +1,6 @@
 [submodule "modules/Weltschmerz"]
 	path = modules/Weltschmerz
 	url = git@github.com:starandserpent/Weltschmerz.git
+[submodule "addons/MonoDebuggerQM"]
+	path = addons/MonoDebuggerQM
+	url = https://github.com/exts/MonoDebuggerQM.git

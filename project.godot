@@ -19,6 +19,14 @@ config/name="World map generator"
 run/main_scene="res://Main.tscn"
 config/icon="res://icon.png"
 
+[editor_plugins]
+
+enabled=PoolStringArray(  )
+
+[mono]
+
+debugger_agent/wait_for_debugger=true
+
 [rendering]
 
 environment/default_environment="res://default_env.tres"
