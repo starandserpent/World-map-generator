@@ -5,7 +5,7 @@ public class Controler : Node
 {
 
     [Export]private string BIOME_DISTRIBUTION_PATH =  "./assets/Biome_distribution.png";
-    [Export]private string IMAGE_SAVE_NAME =  "lol";
+    [Export]private string IMAGE_SAVE_NAME =  "lol.png";
     [Export] private int SEED = 1234;
     [Export] private int TERRAIN_MULTIPLAIER = 2;
     [Export] private int AVERAGE_TERRAIN_HIGHT = 50;
@@ -81,7 +81,7 @@ public class Controler : Node
         ImageTexture texture = new ImageTexture();
         texture.CreateFromImage(map);
         canvas.SetTexture(texture);
-        //IOManager.SaveImage("./", IMAGE_SAVE_NAME, map);
+        IOManager.SaveImage("./", IMAGE_SAVE_NAME, map);
         AddChild(canvas);
     }
 
