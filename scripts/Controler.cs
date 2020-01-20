@@ -14,6 +14,7 @@ public class Controler : Node
     [Export] private bool USE_DEFAULT_CONFIG = true;
     [Export] private int LATITUDE = 500;
     [Export] private int LONGITUDE = 500;
+    [Export] private bool GENERATE_NOISE = true;
 
     private Weltschmerz weltschmerz;
     private TextureRect canvas;
@@ -34,10 +35,57 @@ public class Controler : Node
         biomMap = IOManager.LoadImage(BIOME_DISTRIBUTION_PATH);
         biomMap.Lock();
 
-        GenerateImage();
+        if(GENERATE_NOISE){
+            GenerateNoiseImage();
+        }else{
+            GenerateBiomImage();
+        }
     }
 
-    private void GenerateImage(){
+    private void GenerateBiomImage(){
+        SetConfiguration();
+
+        weltschmerz.Configure(config);
+
+        map = new Image();
+        map.Create(config.longitude, config.latitude, false, biomMap.GetFormat());
+        double maxTemperature = Math.Abs(config.minTemperature) + config.maxTemperature;
+
+        map.Lock();
+        for(int x = 0; x < config.longitude; x++){
+            for(int y = 0; y < config.latitude; y ++){
+
+        double elevation = weltschmerz.GetElevation(x, y);
+        double temperature = weltschmerz.GetTemperature(y, elevation);
+        temperature = (biomMap.GetHeight()*((temperature + maxTemperature) * (biomMap.GetWidth()/maxTemperature)))/biomMap.GetWidth();
+        System.Numerics.Vector2 airFlow = weltschmerz.GetAirFlow(x, y);
+        double precipitation = weltschmerz.GetPrecipitation(x, y, elevation, temperature, airFlow);
+        precipitation = (biomMap.GetWidth() * precipitation)/biomMap.GetHeight();
+
+        precipitation = Math.Min(Math.Max(precipitation, 0), biomMap.GetHeight() - 1);
+        temperature =  Math.Min(Math.Max(temperature, 0), biomMap.GetWidth() - 1);
+
+        int posY = (int)Math.Min(precipitation, temperature);
+        int posX = (int)Math.Min(temperature, precipitation);
+
+        if(!WeltschmerzUtils.IsLand(elevation)){
+            map.SetPixel(x, y, new Color( 0, 0, 1, 1 ));
+        }else{
+            map.SetPixel(x, y, biomMap.GetPixel(posX, posY));
+        }
+            }
+        }
+
+        map.Unlock();
+
+        ImageTexture texture = new ImageTexture();
+        texture.CreateFromImage(map);
+        canvas.SetTexture(texture);
+        //IOManager.SaveImage("./", IMAGE_SAVE_NAME, map);
+        AddChild(canvas);
+    }
+
+        private void GenerateNoiseImage(){
         SetConfiguration();
 
         weltschmerz.Configure(config);
@@ -48,26 +96,8 @@ public class Controler : Node
         map.Lock();
         for(int x = 0; x < config.longitude; x++){
             for(int y = 0; y < config.latitude; y ++){
-
-        double elevation = weltschmerz.GetElevation(x, y);
-        double temperature = weltschmerz.GetTemperature(y, elevation);
-        System.Numerics.Vector2 airFlow = weltschmerz.GetAirFlow(x, y);
-        double precipitation = weltschmerz.GetPrecipitation(x, y, elevation, temperature, airFlow);
-
-        GD.Print(precipitation);
-
-        int posY = (int) Math.Min(Math.Max(precipitation, 0), biomMap.GetHeight() - 1);
-
-        int posX = (int) Math.Min(Math.Max(temperature, 0), biomMap.GetWidth() - 1);
-
-        GD.Print(posX);
-        GD.Print(posY);
-
-        if(!WeltschmerzUtils.IsLand(elevation)){
-            map.SetPixel(x, y, new Color( 0, 0, 1, 1 ));
-        }else{
-            map.SetPixel(x, y, biomMap.GetPixel(posX, posY));
-        }
+                float elevation = (float)weltschmerz.GetElevation(x, y)/(float)(Math.Abs(config.minElevation) + config.maxElevation);
+                map.SetPixel(x, y, new Color(elevation, elevation, elevation, 1));
             }
         }
 
