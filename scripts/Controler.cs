@@ -1,3 +1,5 @@
+using System.Linq;
+using System.Collections.Generic;
 using System;
 using Godot;
 
@@ -5,7 +7,7 @@ public class Controler : Node
 {
 
     [Export]private string BIOME_DISTRIBUTION_PATH =  "./assets/Biome_distribution.png";
-    [Export]private string IMAGE_SAVE_NAME =  "lol.png";
+    [Export]private string IMAGE_SAVE_NAME =  "map.png";
     [Export] private int SEED = 1234;
     [Export] private int TERRAIN_MULTIPLAIER = 2;
     [Export] private int AVERAGE_TERRAIN_HIGHT = 50;
@@ -19,14 +21,17 @@ public class Controler : Node
     private Weltschmerz weltschmerz;
     private TextureRect canvas;
     private Image map;
-
     private Image biomMap;
-
     private Config config;
 
+    private List<int> precipitationValues;
+    private List<int> temperatureValues;
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
     {
+
+        precipitationValues = new List<int>();
+        temperatureValues = new List<int>();
       
         weltschmerz = new Weltschmerz();
 
@@ -57,16 +62,20 @@ public class Controler : Node
 
         double elevation = weltschmerz.GetElevation(x, y);
         double temperature = weltschmerz.GetTemperature(y, elevation);
-        temperature = (biomMap.GetHeight()*((temperature + maxTemperature) * (biomMap.GetWidth()/maxTemperature)))/biomMap.GetWidth();
+
         System.Numerics.Vector2 airFlow = weltschmerz.GetAirFlow(x, y);
         double precipitation = weltschmerz.GetPrecipitation(x, y, elevation, temperature, airFlow);
+        precipitationValues.Add((int)precipitation);
+
         precipitation = (biomMap.GetWidth() * precipitation)/biomMap.GetHeight();
 
+        temperature = (biomMap.GetHeight()*((temperature + Math.Abs(config.minTemperature)) 
+        * (biomMap.GetWidth()/(maxTemperature + Math.Abs(config.minTemperature)))))/biomMap.GetWidth();
         precipitation = Math.Min(Math.Max(precipitation, 0), biomMap.GetHeight() - 1);
         temperature =  Math.Min(Math.Max(temperature, 0), biomMap.GetWidth() - 1);
 
-        int posY = (int)Math.Min(precipitation, temperature);
-        int posX = (int)Math.Min(temperature, precipitation);
+        int posY = (int) Math.Min(precipitation, temperature);
+        int posX = (int)temperature;
 
         if(!WeltschmerzUtils.IsLand(elevation)){
             map.SetPixel(x, y, new Color( 0, 0, 1, 1 ));
@@ -77,6 +86,11 @@ public class Controler : Node
         }
 
         map.Unlock();
+        
+        GD.Print("Precipitation");
+        GD.Print("Min " + precipitationValues.Min());
+        GD.Print("Max "+ precipitationValues.Max());
+        GD.Print("Average "+ precipitationValues.Average());
 
         ImageTexture texture = new ImageTexture();
         texture.CreateFromImage(map);
