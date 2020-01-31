@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Linq;
 using System.Collections.Generic;
 using System;
@@ -7,6 +8,7 @@ public class Controler : Node
 {
 
     [Export]private string BIOME_DISTRIBUTION_PATH =  "./assets/Biome_distribution.png";
+    [Export]private string EARTH_IMAGE_PATH =  "./assets/earth.png";
     [Export]private string IMAGE_SAVE_NAME =  "map.png";
     [Export] private int SEED = 1234;
     [Export] private int TERRAIN_MULTIPLAIER = 2;
@@ -16,7 +18,8 @@ public class Controler : Node
     [Export] private bool USE_DEFAULT_CONFIG = true;
     [Export] private int LATITUDE = 500;
     [Export] private int LONGITUDE = 500;
-    [Export] private bool GENERATE_NOISE = true;
+    [Export] private bool GENERATE_NOISE = false;
+    [Export] private bool USE_EARTH_IMAGE = false;
 
     private Weltschmerz weltschmerz;
     private TextureRect canvas;
@@ -48,9 +51,21 @@ public class Controler : Node
     }
 
     private void GenerateBiomImage(){
+        Stopwatch stopwatch = new Stopwatch();
+        stopwatch.Start();
         SetConfiguration();
 
         weltschmerz.Configure(config);
+
+        if(USE_EARTH_IMAGE){
+            Image map = IOManager.LoadImage(EARTH_IMAGE_PATH);
+            config.latitude = map.GetHeight();
+            config.longitude = map.GetWidth();
+
+            ImageNoiseGenerator generator = new ImageNoiseGenerator(map);
+            weltschmerz.NoiseGenerator = generator;
+            weltschmerz.Configure(config);
+        }
 
         map = new Image();
         map.Create(config.longitude, config.latitude, false, biomMap.GetFormat());
@@ -86,6 +101,9 @@ public class Controler : Node
         }
 
         map.Unlock();
+        stopwatch.Stop();
+
+        GD.Print("Finished in:" + stopwatch.Elapsed.TotalSeconds);
         
         GD.Print("Precipitation");
         GD.Print("Min " + precipitationValues.Min());
@@ -99,7 +117,7 @@ public class Controler : Node
         AddChild(canvas);
     }
 
-        private void GenerateNoiseImage(){
+    private void GenerateNoiseImage(){
         SetConfiguration();
 
         weltschmerz.Configure(config);
