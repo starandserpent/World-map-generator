@@ -1,0 +1,103 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://scripts/Controler.cs" type="Script" id=1]
+[ext_resource path="res://map.png" type="Texture" id=2]
+[ext_resource path="res://scenes/GeneralConfig.tscn" type="PackedScene" id=3]
+
+[node name="Root" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource( 1 )
+USE_EARTH_IMAGE = true
+
+[node name="Menu" type="Control" parent="."]
+anchor_top = 0.05
+anchor_right = 1.0
+anchor_bottom = 0.15
+
+[node name="Load" type="Button" parent="Menu"]
+anchor_left = 0.05
+anchor_top = 0.5
+anchor_right = 0.05
+anchor_bottom = 0.5
+margin_right = 10.0
+margin_bottom = 10.0
+text = "Load"
+
+[node name="Save" type="Button" parent="Menu"]
+anchor_left = 0.1
+anchor_top = 0.5
+anchor_right = 0.1
+anchor_bottom = 0.5
+margin_right = 41.0
+margin_bottom = 10.0
+text = "Save"
+
+[node name="Save as" type="Button" parent="Menu"]
+anchor_left = 0.15
+anchor_top = 0.5
+anchor_right = 0.15
+anchor_bottom = 0.5
+margin_right = 41.0
+margin_bottom = 10.0
+text = "Save as"
+
+[node name="UseEarth" type="CheckBox" parent="Menu"]
+anchor_left = 0.25
+anchor_top = 0.5
+anchor_right = 0.25
+anchor_bottom = 0.5
+margin_right = 41.0
+margin_bottom = 10.0
+text = "Use earth"
+
+[node name="OptionButton" type="OptionButton" parent="Menu"]
+anchor_left = 0.35
+anchor_top = 0.5
+anchor_right = 0.4
+anchor_bottom = 0.5
+margin_right = 50.0
+margin_bottom = 10.0
+
+[node name="ScrollContainer" type="ScrollContainer" parent="."]
+anchor_left = 0.5
+anchor_top = 0.2
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="ScrollContainer"]
+margin_right = 500.0
+margin_bottom = 250.0
+alignment = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="ScrollContainer/VBoxContainer"]
+margin_right = 500.0
+margin_bottom = 250.0
+alignment = 1
+
+[node name="TextureRect" type="TextureRect" parent="ScrollContainer/VBoxContainer/HBoxContainer"]
+margin_right = 500.0
+margin_bottom = 250.0
+texture = ExtResource( 2 )
+
+[node name="Title" type="Label" parent="."]
+anchor_right = 1.0
+margin_bottom = 14.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "World map generator"
+align = 1
+
+[node name="Sliders" type="Control" parent="."]
+anchor_top = 0.2
+anchor_right = 0.5
+anchor_bottom = 1.0
+
+[node name="Title" type="Label" parent="Sliders"]
+anchor_top = 0.05
+anchor_right = 1.0
+anchor_bottom = 0.05
+text = "Sliders for adjusting"
+align = 1
+
+[node name="Children" parent="Sliders" instance=ExtResource( 3 )]

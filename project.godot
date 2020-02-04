@@ -16,8 +16,12 @@ _global_script_class_icons={
 [application]
 
 config/name="World map generator"
-run/main_scene="res://Main.tscn"
+run/main_scene="res://scenes/Main.tscn"
 config/icon="res://icon.png"
+
+[display]
+
+window/size/width=1280
 
 [editor_plugins]
 

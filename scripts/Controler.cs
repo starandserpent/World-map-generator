@@ -142,6 +142,31 @@ public class Controler : Node
         AddChild(canvas);
     }
 
+       private void GenerateMoistureImage(){
+        SetConfiguration();
+
+        weltschmerz.Configure(config);
+
+        map = new Image();
+        map.Create(config.longitude, config.latitude, false, biomMap.GetFormat());
+
+        map.Lock();
+        for(int x = 0; x < config.longitude; x++){
+            for(int y = 0; y < config.latitude; y ++){
+                float value = (float) weltschmerz.GetMoisture(y)/1000;
+                map.SetPixel(x, y, new Color(0, 0, value, 1));
+            }
+        }
+
+        map.Unlock();
+
+        ImageTexture texture = new ImageTexture();
+        texture.CreateFromImage(map);
+        canvas.SetTexture(texture);
+        //IOManager.SaveImage("./", IMAGE_SAVE_NAME, map);
+        AddChild(canvas);
+    }
+
     private void SetConfiguration(){
           if(USE_DEFAULT_CONFIG){
             weltschmerz = new Weltschmerz();

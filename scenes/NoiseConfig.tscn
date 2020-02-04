@@ -1,0 +1,53 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://scenes/adjustable/Edit.tscn" type="PackedScene" id=1]
+[ext_resource path="res://scenes/adjustable/Slider.tscn" type="PackedScene" id=2]
+
+[node name="Children" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="Title" type="Label" parent="."]
+anchor_right = 1.0
+text = "Noise Values"
+align = 1
+
+[node name="Max elevation" parent="." instance=ExtResource( 1 )]
+anchor_top = 0.1
+anchor_bottom = 0.1
+
+[node name="Label" parent="Max elevation" index="0"]
+text = "Max elevation:"
+
+[node name="Min elevation" parent="." instance=ExtResource( 1 )]
+anchor_top = 0.2
+anchor_bottom = 0.2
+
+[node name="Label" parent="Min elevation" index="0"]
+text = "Min elevation"
+
+[node name="Frequency" parent="." instance=ExtResource( 2 )]
+editor/display_folded = true
+anchor_top = 0.3
+anchor_bottom = 0.3
+
+[node name="Title" parent="Frequency" index="0"]
+text = "Frequency"
+
+[node name="Value2" parent="." instance=ExtResource( 2 )]
+anchor_top = 0.2
+anchor_bottom = 0.2
+margin_top = 180.0
+margin_bottom = 180.0
+
+[node name="Value3" parent="." instance=ExtResource( 2 )]
+anchor_top = 0.3
+anchor_bottom = 0.3
+margin_top = 120.0
+margin_bottom = 120.0
+
+[editable path="Max elevation"]
+
+[editable path="Min elevation"]
+
+[editable path="Frequency"]

@@ -1,0 +1,48 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://scenes/adjustable/Slider.tscn" type="PackedScene" id=1]
+
+[node name="Children" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="Title" type="Label" parent="."]
+anchor_right = 1.0
+text = "Circulation Values"
+align = 1
+
+[node name="Exchange Coefficient" parent="." instance=ExtResource( 1 )]
+anchor_top = 0.1
+anchor_bottom = 0.1
+
+[node name="Title" parent="Exchange Coefficient" index="0"]
+text = "Exchange Coefficient"
+
+[node name="Circulationo Octaves" parent="." instance=ExtResource( 1 )]
+anchor_top = 0.2
+anchor_bottom = 0.2
+
+[node name="Title" parent="Circulationo Octaves" index="0"]
+text = "Circulation Octaves:"
+
+[node name="Temperature Influence" parent="." instance=ExtResource( 1 )]
+anchor_top = 0.3
+anchor_bottom = 0.3
+
+[node name="Title" parent="Temperature Influence" index="0"]
+text = "Temperaturse influence:"
+
+[node name="Circulation Decline" parent="." instance=ExtResource( 1 )]
+anchor_top = 0.4
+anchor_bottom = 0.4
+
+[node name="Title" parent="Circulation Decline" index="0"]
+text = "Circulation Decline"
+
+[editable path="Exchange Coefficient"]
+
+[editable path="Circulationo Octaves"]
+
+[editable path="Temperature Influence"]
+
+[editable path="Circulation Decline"]
