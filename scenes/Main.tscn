@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=2]
 
-[ext_resource path="res://scripts/Controler.cs" type="Script" id=1]
+[ext_resource path="res://scripts/RootControler.cs" type="Script" id=1]
 [ext_resource path="res://map.png" type="Texture" id=2]
 [ext_resource path="res://scenes/GeneralConfig.tscn" type="PackedScene" id=3]
 
@@ -51,13 +51,23 @@ margin_right = 41.0
 margin_bottom = 10.0
 text = "Use earth"
 
-[node name="OptionButton" type="OptionButton" parent="Menu"]
+[node name="Maps" type="OptionButton" parent="Menu"]
 anchor_left = 0.35
 anchor_top = 0.5
 anchor_right = 0.4
 anchor_bottom = 0.5
 margin_right = 50.0
 margin_bottom = 10.0
+
+[node name="Path" type="Label" parent="Menu"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_right = 300.0
+margin_bottom = 10.0
+text = "Path: "
+valign = 1
 
 [node name="ScrollContainer" type="ScrollContainer" parent="."]
 anchor_left = 0.5
@@ -75,7 +85,7 @@ margin_right = 500.0
 margin_bottom = 250.0
 alignment = 1
 
-[node name="TextureRect" type="TextureRect" parent="ScrollContainer/VBoxContainer/HBoxContainer"]
+[node name="MapImage" type="TextureRect" parent="ScrollContainer/VBoxContainer/HBoxContainer"]
 margin_right = 500.0
 margin_bottom = 250.0
 texture = ExtResource( 2 )
