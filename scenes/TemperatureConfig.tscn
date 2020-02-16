@@ -1,31 +1,33 @@
-[gd_scene load_steps=2 format=2]
+[gd_scene load_steps=3 format=2]
 
-[ext_resource path="res://scenes/adjustable/Slider.tscn" type="PackedScene" id=1]
+[ext_resource path="res://scripts/TemperatureControler.cs" type="Script" id=1]
+[ext_resource path="res://scenes/adjustable/Slider.tscn" type="PackedScene" id=2]
 
 [node name="Children" type="Control"]
 anchor_right = 1.0
 anchor_bottom = 1.0
+script = ExtResource( 1 )
 
 [node name="Title" type="Label" parent="."]
 anchor_right = 1.0
 text = "Temperature Values"
 align = 1
 
-[node name="Max Temperature" parent="." instance=ExtResource( 1 )]
+[node name="Max Temperature" parent="." instance=ExtResource( 2 )]
 anchor_top = 0.1
 anchor_bottom = 0.1
 
 [node name="Title" parent="Max Temperature" index="0"]
 text = "Max Temperature:"
 
-[node name="Min Temperature" parent="." instance=ExtResource( 1 )]
+[node name="Min Temperature" parent="." instance=ExtResource( 2 )]
 anchor_top = 0.2
 anchor_bottom = 0.2
 
 [node name="Title" parent="Min Temperature" index="0"]
 text = "Min Temperature"
 
-[node name="Temperature decrease" parent="." instance=ExtResource( 1 )]
+[node name="Temperature decrease" parent="." instance=ExtResource( 2 )]
 anchor_top = 0.3
 anchor_bottom = 0.3
 

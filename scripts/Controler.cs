@@ -1,11 +1,13 @@
 using Godot;
-using System.Collections.Generic;
 
 public abstract class Controler : Node{
-    private RootControler root;
-    public abstract void Configure(Config config);
-    protected void FindControler(){
-        GetParent().FindNode("Root");
+    protected RootControler root;
+    protected Config config;
+    protected void FindRoot(){
+        root = (RootControler)FindParent("Root");
+        config = root.GetConfig();
     }
-    public abstract Config GetValues();
+
+    public abstract void BoxTriggered(int value);
+    public abstract void SliderTriggered(int value);
 }

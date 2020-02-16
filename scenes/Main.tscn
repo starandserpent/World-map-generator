@@ -1,8 +1,7 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=3 format=2]
 
 [ext_resource path="res://scripts/RootControler.cs" type="Script" id=1]
 [ext_resource path="res://map.png" type="Texture" id=2]
-[ext_resource path="res://scenes/GeneralConfig.tscn" type="PackedScene" id=3]
 
 [node name="Root" type="Control"]
 anchor_right = 1.0
@@ -65,7 +64,7 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 margin_right = 300.0
-margin_bottom = 10.0
+margin_bottom = 14.0
 text = "Path: "
 valign = 1
 
@@ -109,5 +108,3 @@ anchor_right = 1.0
 anchor_bottom = 0.05
 text = "Sliders for adjusting"
 align = 1
-
-[node name="Children" parent="Sliders" instance=ExtResource( 3 )]

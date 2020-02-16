@@ -12,10 +12,15 @@ autowrap = true
 [node name="HSlider" type="HSlider" parent="."]
 anchor_left = 0.3
 anchor_right = 0.8
+step = 0.1
+page = 10.0
+allow_greater = true
+allow_lesser = true
 ticks_on_borders = true
 
-[node name="LineEdit" type="LineEdit" parent="."]
+[node name="SpinBox" type="SpinBox" parent="."]
 anchor_left = 0.9
 anchor_right = 1.0
-caret_blink = true
-caret_blink_speed = 0.5
+page = 10.0
+allow_greater = true
+allow_lesser = true

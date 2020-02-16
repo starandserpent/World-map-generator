@@ -11,3 +11,5 @@ margin_bottom = 14.0
 [node name="SpinBox" type="SpinBox" parent="."]
 anchor_left = 0.5
 anchor_right = 0.6
+allow_greater = true
+allow_lesser = true

@@ -48,7 +48,7 @@ public class RootControler : Node
 
         Init();
 
-        GenerateBiomImage();
+        Generate();
     }
 
     private void Init(){
@@ -68,7 +68,7 @@ public class RootControler : Node
         pathLabel = (Label) FindNode("Path");
 
         useEarth.Pressed = USE_EARTH_IMAGE;
-        useEarth.Connect("pressed", this, "Toggle");
+        useEarth.Connect("pressed", this, "Generate");
 
         UpdatePath();
 
@@ -83,7 +83,7 @@ public class RootControler : Node
         parent = FindNode("Sliders");
     }
 
-    private void Toggle(){
+    public void Generate(){
         SelectMap(maps.Selected);
     }
 
@@ -94,38 +94,6 @@ public class RootControler : Node
             }
         }
 
-        switch(id){
-            case 0:
-                parent.AddChild(generalConfig.Instance());
-                GenerateBiomImage();
-                break;
-            case 1:
-                parent.AddChild(noiseConfig.Instance());
-                GenerateNoiseImage();
-                break;
-            case 2:
-                parent.AddChild(precipitationConfig.Instance());
-                break;
-            case 3:
-                parent.AddChild(circulationConfig.Instance());
-                break;
-            case 4:
-                parent.AddChild(temperatureConfig.Instance());
-                break;    
-        }
-    }
-
-    private void UpdatePath(){
-        string path = ConfigManager.BASE_CONFIG_PATH;
-
-        if(path.Length - 75 < 0){
-            pathLabel.SetText(path);
-        }else{
-            pathLabel.SetText("... " + path.Substring(path.Length - 75));
-        }
-    }
-
-    private void GenerateBiomImage(){
         Stopwatch stopwatch = new Stopwatch();
         stopwatch.Start();
 
@@ -146,32 +114,28 @@ public class RootControler : Node
         double maxTemperature = Math.Abs(config.minTemperature) + config.maxTemperature;
 
         map.Lock();
-        for(int x = 0; x < config.longitude; x++){
-            for(int y = 0; y < config.latitude; y ++){
 
-        double elevation = weltschmerz.GetElevation(x, y);
-        double temperature = weltschmerz.GetTemperature(y, elevation);
-
-        System.Numerics.Vector2 airFlow = weltschmerz.GetAirFlow(x, y);
-        double precipitation = weltschmerz.GetPrecipitation(x, y, elevation, temperature, airFlow);
-        precipitationValues.Add((int)precipitation);
-
-        precipitation = (biomMap.GetWidth() * precipitation)/biomMap.GetHeight();
-
-        temperature = (biomMap.GetHeight()*((temperature + Math.Abs(config.minTemperature)) 
-        * (biomMap.GetWidth()/(maxTemperature + Math.Abs(config.minTemperature)))))/biomMap.GetWidth();
-        precipitation = Math.Min(Math.Max(precipitation, 0), biomMap.GetHeight() - 1);
-        temperature =  Math.Min(Math.Max(temperature, 0), biomMap.GetWidth() - 1);
-
-        int posY = (int) Math.Min(precipitation, temperature);
-        int posX = (int)temperature;
-
-        if(!WeltschmerzUtils.IsLand(elevation)){
-            map.SetPixel(x, y, new Color( 0, 0, 1, 1 ));
-        }else{
-            map.SetPixel(x, y, biomMap.GetPixel(posX, posY));
-        }
-            }
+        switch(id){
+            case 0:
+                parent.AddChild(generalConfig.Instance());
+                GenerateBiomMap();
+                break;
+            case 1:
+                parent.AddChild(noiseConfig.Instance());
+                GenerateNoiseMap();
+                break;
+            case 2:
+                parent.AddChild(temperatureConfig.Instance());
+                GenerateTemperatureMap();
+                break;
+            case 3:
+                parent.AddChild(circulationConfig.Instance());
+                GenerateCirculationMap();
+                break;
+            case 4:
+                parent.AddChild(precipitationConfig.Instance());
+                GeneratePrecipitationMap();
+                break;    
         }
 
         map.Unlock();
@@ -187,25 +151,94 @@ public class RootControler : Node
         ImageTexture texture = new ImageTexture();
         texture.CreateFromImage(map);
         canvas.SetTexture(texture);
+    }
+
+    private void UpdatePath(){
+        string path = ConfigManager.BASE_CONFIG_PATH;
+
+        if(path.Length - 75 < 0){
+            pathLabel.SetText(path);
+        }else{
+            pathLabel.SetText("... " + path.Substring(path.Length - 75));
+        }
+    }
+
+    private void GenerateBiomMap(){
+        for(int x = 0; x < config.longitude; x++){
+            for(int y = 0; y < config.latitude; y ++){
+        
+        double elevation = weltschmerz.GetElevation(x, y);
+        double temperature = weltschmerz.GetTemperature(y, elevation);
+
+        System.Numerics.Vector2 airFlow = weltschmerz.GetAirFlow(x, y);
+        double precipitation = weltschmerz.GetPrecipitation(x, y, elevation, temperature, airFlow);
+        precipitationValues.Add((int)precipitation);
+
+        precipitation = (biomMap.GetWidth() * precipitation)/biomMap.GetHeight();
+
+        temperature = (biomMap.GetHeight()*((temperature + Math.Abs(config.minTemperature)) 
+        * (biomMap.GetWidth()/(config.maxTemperature + Math.Abs(config.minTemperature)))))/biomMap.GetWidth();
+        precipitation = Math.Min(Math.Max(precipitation, 0), biomMap.GetHeight() - 1);
+        temperature =  Math.Min(Math.Max(temperature, 0), biomMap.GetWidth() - 1);
+
+        int posY = (int) Math.Min(precipitation, temperature);
+        int posX = (int)temperature;
+
+                if(!WeltschmerzUtils.IsLand(elevation)){
+                    map.SetPixel(x, y, new Color( 0, 0, 1, 1 ));
+                }else{
+                    map.SetPixel(x, y, biomMap.GetPixel(posX, posY));
+                }
+            }
+        }
         IOManager.SaveImage("./", IMAGE_SAVE_NAME, map);
     }
 
-    private void GenerateNoiseImage(){
-        map = new Image();
-        map.Create(config.longitude, config.latitude, false, biomMap.GetFormat());
-
-        map.Lock();
+    private void GenerateNoiseMap(){
+        bool earth = useEarth.IsPressed();
         for(int x = 0; x < config.longitude; x++){
             for(int y = 0; y < config.latitude; y ++){
-                float elevation = (float)weltschmerz.GetElevation(x, y)/(float)(Math.Abs(config.minElevation) + config.maxElevation);
-                map.SetPixel(x, y, new Color(elevation, elevation, elevation, 1));
+                if(earth){
+                    float elevation = (float)weltschmerz.GetElevation(x, y);
+                    map.SetPixel(x, y, new Color(elevation, elevation, elevation, 1f));
+                }else{
+                    float elevation = ((float)weltschmerz.GetElevation(x, y) + 1)/2;
+                    map.SetPixel(x, y, new Color(elevation, elevation, elevation, 1f));
+                }
             }
         }
+    }
 
-        map.Unlock();
+    private void GenerateTemperatureMap(){
+        float minTemperature = Math.Abs(config.minTemperature);
+        float maxTemperature = minTemperature + config.maxTemperature;
+        for(int x = 0; x < config.longitude; x++){
+            for(int y = 0; y < config.latitude; y ++){
+                float temperature = ((float)weltschmerz.GetTemperature(x, y) + minTemperature)/maxTemperature;
+                map.SetPixel(x, y, new Color(temperature, 0, 0, 1f));
+            }
+        }
+    }
 
-        ImageTexture texture = new ImageTexture();
-        texture.CreateFromImage(map);
-        canvas.SetTexture(texture);
+    private void GenerateCirculationMap(){
+        for(int x = 0; x < config.longitude; x++){
+            for(int y = 0; y < config.latitude; y ++){
+                System.Numerics.Vector2 circulation = weltschmerz.GetAirFlow(x, y);
+                map.SetPixel(x, y, new Color(circulation.X/10, circulation.Y/10, 0, 1f));
+            }
+        }
+    }
+
+    private void GeneratePrecipitationMap(){
+        for(int x = 0; x < config.longitude; x++){
+            for(int y = 0; y < config.latitude; y ++){
+                float precipitation = ((float)weltschmerz.GetPrecipitation(x, y))/config.maxPrecipitation;
+                map.SetPixel(x, y, new Color(0, 0, precipitation, 1f));
+            }
+        }
+    }
+
+    public Config GetConfig(){
+        return config;
     }
 }
