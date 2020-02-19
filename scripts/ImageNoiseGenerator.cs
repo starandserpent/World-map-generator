@@ -5,7 +5,7 @@ public class ImageNoiseGenerator : NoiseGenerator{
     private int average;
     public ImageNoiseGenerator(Image map, Config config) : base(config){
         this.map = map;
-        average = (Math.Abs(config.minElevation) + config.maxElevation)/2;
+        average = (Math.Abs(config.noise.min_elevation) + config.noise.max_elevation)/2;
         map.Lock();
     }
 

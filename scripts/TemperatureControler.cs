@@ -23,14 +23,14 @@ public class TemperatureControler : Controler{
         temperatureDecreaseSlider = (Slider)FindNode("Temperature decrease").GetChild(1);
         temperatureDecreaseBox = (SpinBox)FindNode("Temperature decrease").GetChild(2);
 
-        minTemperatureSlider.SetValue(config.minTemperature);
-        minTemperatureBox.SetValue(config.minTemperature);
+        minTemperatureSlider.SetValue(config.temperature.min_temperature);
+        minTemperatureBox.SetValue(config.temperature.min_temperature);
 
-        maxTemperatureSlider.SetValue(config.maxTemperature);
-        maxTemperatureBox.SetValue(config.maxTemperature);
+        maxTemperatureSlider.SetValue(config.temperature.max_temperature);
+        maxTemperatureBox.SetValue(config.temperature.max_temperature);
 
-        temperatureDecreaseSlider.SetValue(config.temperatureDecrease);
-        temperatureDecreaseBox.SetValue(config.temperatureDecrease);
+        temperatureDecreaseSlider.SetValue(config.temperature.temperature_decrease);
+        temperatureDecreaseBox.SetValue(config.temperature.temperature_decrease);
 
         maxTemperatureBox.Connect("value_changed", this, "BoxTriggered");
         minTemperatureBox.Connect("value_changed", this, "BoxTriggered");
@@ -42,9 +42,9 @@ public class TemperatureControler : Controler{
     }
 
     public override void BoxTriggered(int value){
-        config.maxTemperature = (int) maxTemperatureBox.GetValue();
-        config.minTemperature = (int) minTemperatureBox.GetValue();
-        config.temperatureDecrease = temperatureDecreaseBox.GetValue();
+        config.temperature.max_temperature = (int) maxTemperatureBox.GetValue();
+        config.temperature.min_temperature = (int) minTemperatureBox.GetValue();
+        config.temperature.temperature_decrease = temperatureDecreaseBox.GetValue();
 
         maxTemperatureSlider.SetValue(maxTemperatureBox.GetValue());
         minTemperatureSlider.SetValue(minTemperatureBox.GetValue());
@@ -54,10 +54,9 @@ public class TemperatureControler : Controler{
     }
     
     public override void SliderTriggered(int value){
-        
-        config.maxTemperature = (int) maxTemperatureSlider.GetValue();
-        config.minTemperature = (int) minTemperatureSlider.GetValue();
-        config.temperatureDecrease = temperatureDecreaseSlider.GetValue();
+        config.temperature.max_temperature = (int) maxTemperatureSlider.GetValue();
+        config.temperature.min_temperature = (int) minTemperatureSlider.GetValue();
+        config.temperature.temperature_decrease = temperatureDecreaseSlider.GetValue();
 
         maxTemperatureBox.SetValue(maxTemperatureSlider.GetValue());
         minTemperatureBox.SetValue(minTemperatureSlider.GetValue());

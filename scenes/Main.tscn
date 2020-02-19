@@ -13,6 +13,8 @@ USE_EARTH_IMAGE = true
 anchor_top = 0.05
 anchor_right = 1.0
 anchor_bottom = 0.15
+margin_left = 1.0
+margin_right = 1.0
 
 [node name="Load" type="Button" parent="Menu"]
 anchor_left = 0.05
@@ -98,6 +100,7 @@ text = "World map generator"
 align = 1
 
 [node name="Sliders" type="Control" parent="."]
+editor/display_folded = true
 anchor_top = 0.2
 anchor_right = 0.5
 anchor_bottom = 1.0
@@ -108,3 +111,49 @@ anchor_right = 1.0
 anchor_bottom = 0.05
 text = "Sliders for adjusting"
 align = 1
+
+[node name="LoadDialog" type="FileDialog" parent="."]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -500.0
+margin_top = -250.0
+margin_right = 500.0
+margin_bottom = 250.0
+window_title = "Open a File"
+resizable = true
+dialog_hide_on_ok = true
+mode = 0
+access = 2
+filters = PoolStringArray( "*.conf" )
+current_dir = "C:/Users/Pawlost/Documents/GameProjects/ROTO/Godot/World-map-generator"
+current_path = "C:/Users/Pawlost/Documents/GameProjects/ROTO/Godot/World-map-generator/"
+
+[node name="SaveAsDialog" type="FileDialog" parent="."]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -500.0
+margin_top = -250.0
+margin_right = 500.0
+margin_bottom = 250.0
+resizable = true
+access = 2
+filters = PoolStringArray( "*.conf" )
+current_dir = "C:/Users/Pawlost/Documents/GameProjects/ROTO/Godot/World-map-generator"
+current_path = "C:/Users/Pawlost/Documents/GameProjects/ROTO/Godot/World-map-generator/"
+
+[node name="SaveDialog" type="AcceptDialog" parent="."]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -200.0
+margin_top = -50.0
+margin_right = 200.0
+margin_bottom = 50.0
+window_title = "File Saved"
+resizable = true
+dialog_text = "Configuration was successfully saved to your latest config file."

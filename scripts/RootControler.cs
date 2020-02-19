@@ -24,6 +24,10 @@ public class RootControler : Node
     private Button saveas;
     private CheckBox useEarth;
     private OptionButton maps;
+    private FileDialog loadDialog;
+    private FileDialog saveasDialog;
+    private AcceptDialog saveDialog;
+
     private PackedScene generalConfig;
     private PackedScene noiseConfig;
     private PackedScene temperatureConfig;
@@ -33,13 +37,18 @@ public class RootControler : Node
     private Node parent;
     private Config config;
 
+    private String currentConfigPath;
+    private String currentDirectoryPath;
+
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
     {
         precipitationValues = new List<int>();
         temperatureValues = new List<int>();
 
-        config = ConfigManager.GetConfig();
+        currentDirectoryPath = ConfigManager.BASE_CONFIG_DIRECTORY_PATH;
+        currentConfigPath = ConfigManager.BASE_CONFIG_FILE_PATH;
+        config = ConfigManager.GetConfig(currentConfigPath);
       
         weltschmerz = new Weltschmerz(config);
 
@@ -66,6 +75,9 @@ public class RootControler : Node
         saveas = (Button) FindNode("Save as");
         load = (Button) FindNode("Load");
         pathLabel = (Label) FindNode("Path");
+        loadDialog = (FileDialog) FindNode("LoadDialog");
+        saveasDialog = (FileDialog) FindNode("SaveAsDialog");
+        saveDialog = (AcceptDialog) FindNode("SaveDialog");
 
         useEarth.Pressed = USE_EARTH_IMAGE;
         useEarth.Connect("pressed", this, "Generate");
@@ -79,12 +91,53 @@ public class RootControler : Node
         maps.AddItem("Precipitation", 4);
 
         maps.Connect("item_selected", this, nameof(SelectMap));
+        save.Connect("pressed", this, nameof(SaveDialog));
+        saveas.Connect("pressed", this, nameof(SaveAsDialog));
+        load.Connect("pressed", this, nameof(LoadDialog));
+
+        loadDialog.Connect("file_selected", this, nameof(LoadConfig));
+        loadDialog.Connect("dir_selected", this, nameof(UpdateDirectory));
+
+        saveasDialog.Connect("file_selected", this, nameof(SaveConfig));
+        saveasDialog.Connect("dir_selected", this, nameof(UpdateDirectory));
 
         parent = FindNode("Sliders");
     }
 
     public void Generate(){
         SelectMap(maps.Selected);
+    }
+
+    private void SaveAsDialog(){
+        saveasDialog.SetCurrentDir(currentDirectoryPath);
+        saveasDialog.Show();
+    }
+
+    private void SaveDialog(){
+        SaveConfig(currentConfigPath);
+        saveDialog.Show();
+    }
+
+    private void LoadDialog(){
+        loadDialog.SetCurrentDir(currentDirectoryPath);
+        loadDialog.Show();
+    }
+
+    private void SaveConfig(string path){
+        currentConfigPath = path;
+        System.IO.File.WriteAllText(@path, Newtonsoft.Json.JsonConvert.SerializeObject(config));
+        UpdatePath();
+    }
+
+    private void UpdateDirectory(string directory){
+        currentDirectoryPath = directory;
+    }
+
+    private void LoadConfig(string path){
+        currentConfigPath = path;
+        config = ConfigManager.GetConfig(path);
+        UpdatePath();
+        Generate();
     }
 
     private void SelectMap(int id){
@@ -99,8 +152,8 @@ public class RootControler : Node
 
         if(useEarth.IsPressed()){
             Image map = IOManager.LoadImage(EARTH_IMAGE_PATH);
-            config.latitude = map.GetHeight();
-            config.longitude = map.GetWidth();
+            config.map.latitude = map.GetHeight();
+            config.map.longitude = map.GetWidth();
 
             ImageNoiseGenerator generator = new ImageNoiseGenerator(map, config);
             weltschmerz.NoiseGenerator = generator;
@@ -110,8 +163,8 @@ public class RootControler : Node
         }
 
         map = new Image();
-        map.Create(config.longitude, config.latitude, false, biomMap.GetFormat());
-        double maxTemperature = Math.Abs(config.minTemperature) + config.maxTemperature;
+        map.Create(config.map.longitude, config.map.latitude, false, biomMap.GetFormat());
+        double maxTemperature = Math.Abs(config.temperature.min_temperature) + config.temperature.max_temperature;
 
         map.Lock();
 
@@ -154,18 +207,16 @@ public class RootControler : Node
     }
 
     private void UpdatePath(){
-        string path = ConfigManager.BASE_CONFIG_PATH;
-
-        if(path.Length - 75 < 0){
-            pathLabel.SetText(path);
+        if(currentConfigPath.Length - 75 < 0){
+            pathLabel.SetText(currentConfigPath);
         }else{
-            pathLabel.SetText("... " + path.Substring(path.Length - 75));
+            pathLabel.SetText("... " + currentConfigPath.Substring(currentConfigPath.Length - 75));
         }
     }
 
     private void GenerateBiomMap(){
-        for(int x = 0; x < config.longitude; x++){
-            for(int y = 0; y < config.latitude; y ++){
+        for(int x = 0; x < config.map.longitude; x++){
+            for(int y = 0; y < config.map.latitude; y ++){
         
         double elevation = weltschmerz.GetElevation(x, y);
         double temperature = weltschmerz.GetTemperature(y, elevation);
@@ -176,8 +227,8 @@ public class RootControler : Node
 
         precipitation = (biomMap.GetWidth() * precipitation)/biomMap.GetHeight();
 
-        temperature = (biomMap.GetHeight()*((temperature + Math.Abs(config.minTemperature)) 
-        * (biomMap.GetWidth()/(config.maxTemperature + Math.Abs(config.minTemperature)))))/biomMap.GetWidth();
+        temperature = (biomMap.GetHeight()*((temperature + Math.Abs(config.temperature.min_temperature)) 
+        * (biomMap.GetWidth()/(config.temperature.max_temperature + Math.Abs(config.temperature.min_temperature)))))/biomMap.GetWidth();
         precipitation = Math.Min(Math.Max(precipitation, 0), biomMap.GetHeight() - 1);
         temperature =  Math.Min(Math.Max(temperature, 0), biomMap.GetWidth() - 1);
 
@@ -196,8 +247,8 @@ public class RootControler : Node
 
     private void GenerateNoiseMap(){
         bool earth = useEarth.IsPressed();
-        for(int x = 0; x < config.longitude; x++){
-            for(int y = 0; y < config.latitude; y ++){
+        for(int x = 0; x < config.map.longitude; x++){
+            for(int y = 0; y < config.map.latitude; y ++){
                 if(earth){
                     float elevation = (float)weltschmerz.GetElevation(x, y);
                     map.SetPixel(x, y, new Color(elevation, elevation, elevation, 1f));
@@ -210,10 +261,10 @@ public class RootControler : Node
     }
 
     private void GenerateTemperatureMap(){
-        float minTemperature = Math.Abs(config.minTemperature);
-        float maxTemperature = minTemperature + config.maxTemperature;
-        for(int x = 0; x < config.longitude; x++){
-            for(int y = 0; y < config.latitude; y ++){
+        float minTemperature = Math.Abs(config.temperature.min_temperature);
+        float maxTemperature = minTemperature + config.temperature.max_temperature;
+        for(int x = 0; x < config.map.longitude; x++){
+            for(int y = 0; y < config.map.latitude; y ++){
                 float temperature = ((float)weltschmerz.GetTemperature(x, y) + minTemperature)/maxTemperature;
                 map.SetPixel(x, y, new Color(temperature, 0, 0, 1f));
             }
@@ -221,8 +272,8 @@ public class RootControler : Node
     }
 
     private void GenerateCirculationMap(){
-        for(int x = 0; x < config.longitude; x++){
-            for(int y = 0; y < config.latitude; y ++){
+        for(int x = 0; x < config.map.longitude; x++){
+            for(int y = 0; y < config.map.latitude; y ++){
                 System.Numerics.Vector2 circulation = weltschmerz.GetAirFlow(x, y);
                 map.SetPixel(x, y, new Color(circulation.X/10, circulation.Y/10, 0, 1f));
             }
@@ -230,9 +281,9 @@ public class RootControler : Node
     }
 
     private void GeneratePrecipitationMap(){
-        for(int x = 0; x < config.longitude; x++){
-            for(int y = 0; y < config.latitude; y ++){
-                float precipitation = ((float)weltschmerz.GetPrecipitation(x, y))/config.maxPrecipitation;
+        for(int x = 0; x < config.map.longitude; x++){
+            for(int y = 0; y < config.map.latitude; y ++){
+                float precipitation = ((float)weltschmerz.GetPrecipitation(x, y))/config.precipitation.max_precipitation;
                 map.SetPixel(x, y, new Color(0, 0, precipitation, 1f));
             }
         }

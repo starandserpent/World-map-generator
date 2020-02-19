@@ -21,14 +21,14 @@ public class CirculationControler : Controler{
         circulationDeclineSlider = (Slider)FindNode("Circulation Decline").GetChild(1);
         circulationDeclineBox = (SpinBox)FindNode("Circulation Decline").GetChild(2);
 
-        exchangeCoeficientSlider.SetValue(config.exchangeCoefficient);
-        exchangeCoeficientBox.SetValue(config.exchangeCoefficient);
+        exchangeCoeficientSlider.SetValue(config.circulation.exchange_coefficient);
+        exchangeCoeficientBox.SetValue(config.circulation.exchange_coefficient);
 
-        circulationOctavesSlider.SetValue(config.circulationOctaves);
-        circulationOctavesBox.SetValue(config.circulationOctaves);
+        circulationOctavesSlider.SetValue(config.circulation.circulation_octaves);
+        circulationOctavesBox.SetValue(config.circulation.circulation_octaves);
 
-        circulationDeclineSlider.SetValue(config.circulationDecline);
-        circulationDeclineBox.SetValue(config.circulationDecline);
+        circulationDeclineSlider.SetValue(config.circulation.circulation_decline);
+        circulationDeclineBox.SetValue(config.circulation.circulation_decline);
 
         exchangeCoeficientBox.Connect("value_changed", this, "BoxTriggered");
         circulationOctavesBox.Connect("value_changed", this, "BoxTriggered");
@@ -40,9 +40,9 @@ public class CirculationControler : Controler{
     }
 
     public override void BoxTriggered(int value){
-        config.exchangeCoefficient = exchangeCoeficientBox.GetValue();
-        config.circulationOctaves = (int) circulationOctavesBox.GetValue();
-        config.circulationDecline = (int) circulationDeclineBox.GetValue();
+        config.circulation.exchange_coefficient = exchangeCoeficientBox.GetValue();
+        config.circulation.circulation_octaves = (int) circulationOctavesBox.GetValue();
+        config.circulation.circulation_decline = (int) circulationDeclineBox.GetValue();
 
         exchangeCoeficientSlider.SetValue(exchangeCoeficientBox.GetValue());
         circulationOctavesSlider.SetValue(circulationOctavesBox.GetValue());
@@ -52,9 +52,9 @@ public class CirculationControler : Controler{
     }
     
     public override void SliderTriggered(int value){
-        config.exchangeCoefficient = exchangeCoeficientSlider.GetValue();
-        config.circulationOctaves = (int) circulationOctavesSlider.GetValue();
-        config.circulationDecline = (int) circulationDeclineSlider.GetValue();
+        config.circulation.exchange_coefficient = exchangeCoeficientSlider.GetValue();
+        config.circulation.circulation_octaves = (int) circulationOctavesSlider.GetValue();
+        config.circulation.circulation_decline = (int) circulationDeclineSlider.GetValue();
 
         exchangeCoeficientBox.SetValue(exchangeCoeficientSlider.GetValue());
         circulationOctavesBox.SetValue(circulationOctavesSlider.GetValue());

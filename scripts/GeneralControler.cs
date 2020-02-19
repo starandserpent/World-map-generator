@@ -12,9 +12,9 @@ public class GeneralControler : Controler{
         longitude = (SpinBox)FindNode("Longitude").GetChild(1);
         latitude = (SpinBox)FindNode("Latitude").GetChild(1);
 
-        seed.SetValue(config.seed);
-        latitude.SetValue(config.latitude);
-        longitude.SetValue(config.longitude);
+        seed.SetValue(config.map.seed);
+        latitude.SetValue(config.map.latitude);
+        longitude.SetValue(config.map.longitude);
 
         seed.Connect("value_changed", this, "BoxTriggered");
         longitude.Connect("value_changed", this, "BoxTriggered");
@@ -22,9 +22,9 @@ public class GeneralControler : Controler{
     }
 
     public override void BoxTriggered(int value){
-        config.seed = (int)seed.GetValue();
-        config.latitude = (int) latitude.GetValue();
-        config.longitude = (int) longitude.GetValue();
+        config.map.seed = (int)seed.GetValue();
+        config.map.latitude = (int) latitude.GetValue();
+        config.map.longitude = (int) longitude.GetValue();
 
         root.Generate();
     }

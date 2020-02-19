@@ -52,29 +52,29 @@ public class PrecipitationControler : Controler {
         evaporationSlider = (Slider)FindNode("Evaporation").GetChild(1);
         evaporationBox = (SpinBox)FindNode("Evaporation").GetChild(2);
 
-        circulationIntensitySlider.SetValue(config.circulationOctaves);
-        circulationIntensityBox.SetValue(config.circulationOctaves);        
+        circulationIntensitySlider.SetValue(config.precipitation.circulation_intensity);
+        circulationIntensityBox.SetValue(config.precipitation.circulation_intensity);        
 
-        orographicEffectSlider.SetValue(config.orographicEffect);
-        orographicEffectBox.SetValue(config.orographicEffect);
+        orographicEffectSlider.SetValue(config.precipitation.orographic_effect);
+        orographicEffectBox.SetValue(config.precipitation.orographic_effect);
         
-        precipitationIntesitySlider.SetValue(config.precipitationIntensity);
-        precipitationIntesityBox.SetValue(config.precipitationIntensity);
+        precipitationIntesitySlider.SetValue(config.precipitation.precipitationI_intensity);
+        precipitationIntesityBox.SetValue(config.precipitation.precipitationI_intensity);
 
-        iterationSlider.SetValue(config.iteration);
-        iterationBox.SetValue(config.iteration);
+        iterationSlider.SetValue(config.precipitation.iteration);
+        iterationBox.SetValue(config.precipitation.iteration);
 
-        elevationDeltaSlider.SetValue(config.elevationDelta);
-        elevationDeltaBox.SetValue(config.elevationDelta);
+        elevationDeltaSlider.SetValue(config.precipitation.elevation_delta);
+        elevationDeltaBox.SetValue(config.precipitation.elevation_delta);
 
-        maxPrecipitationSlider.SetValue(config.maxPrecipitation);
-        maxPrecipitationBox.SetValue(config.maxPrecipitation);
+        maxPrecipitationSlider.SetValue(config.precipitation.max_precipitation);
+        maxPrecipitationBox.SetValue(config.precipitation.max_precipitation);
 
-        transpirationSlider.SetValue(config.transpiration);
-        transpirationBox.SetValue(config.transpiration);
+        transpirationSlider.SetValue(config.humidity.transpiration);
+        transpirationBox.SetValue(config.humidity.transpiration);
 
-        evaporationSlider.SetValue(config.transpiration);
-        evaporationBox.SetValue(config.transpiration);
+        evaporationSlider.SetValue(config.humidity.evaporation);
+        evaporationBox.SetValue(config.humidity.evaporation);
 
         circulationIntensityBox.Connect("value_changed", this, "BoxTriggered");
         orographicEffectBox.Connect("value_changed", this, "BoxTriggered");
@@ -96,14 +96,14 @@ public class PrecipitationControler : Controler {
     }
 
     public override void BoxTriggered(int value){
-        config.circulationIntensity = circulationIntensityBox.GetValue();
-        config.orographicEffect = orographicEffectBox.GetValue();
-        config.precipitationIntensity = precipitationIntesityBox.GetValue();
-        config.iteration = iterationBox.GetValue();
-        config.elevationDelta = (int) elevationDeltaBox.GetValue();
-        config.maxPrecipitation = (int) maxPrecipitationBox.GetValue();
-        config.transpiration = transpirationBox.GetValue();
-        config.evaporation = evaporationBox.GetValue();
+        config.precipitation.circulation_intensity = circulationIntensityBox.GetValue();
+        config.precipitation.orographic_effect = orographicEffectBox.GetValue();
+        config.precipitation.precipitationI_intensity = precipitationIntesityBox.GetValue();
+        config.precipitation.iteration = iterationBox.GetValue();
+        config.precipitation.elevation_delta = (int) elevationDeltaBox.GetValue();
+        config.precipitation.max_precipitation = (int) maxPrecipitationBox.GetValue();
+        config.humidity.transpiration = transpirationBox.GetValue();
+        config.humidity.evaporation = evaporationBox.GetValue();
 
         circulationIntensitySlider.SetValue(circulationIntensityBox.GetValue());
         orographicEffectSlider.SetValue(orographicEffectBox.GetValue());
@@ -118,14 +118,14 @@ public class PrecipitationControler : Controler {
     }
     
     public override void SliderTriggered(int value){
-        config.circulationIntensity = circulationIntensitySlider.GetValue();
-        config.orographicEffect = orographicEffectSlider.GetValue();
-        config.precipitationIntensity = precipitationIntesitySlider.GetValue();
-        config.iteration = iterationSlider.GetValue();
-        config.elevationDelta = (int) elevationDeltaSlider.GetValue();
-        config.maxPrecipitation = (int) maxPrecipitationSlider.GetValue();
-        config.transpiration = transpirationSlider.GetValue();
-        config.evaporation = evaporationSlider.GetValue();
+        config.precipitation.circulation_intensity = circulationIntensitySlider.GetValue();
+        config.precipitation.orographic_effect = orographicEffectSlider.GetValue();
+        config.precipitation.precipitationI_intensity = precipitationIntesitySlider.GetValue();
+        config.precipitation.iteration = iterationSlider.GetValue();
+        config.precipitation.elevation_delta = (int) elevationDeltaSlider.GetValue();
+        config.precipitation.max_precipitation = (int) maxPrecipitationSlider.GetValue();
+        config.humidity.transpiration = transpirationSlider.GetValue();
+        config.humidity.evaporation = evaporationSlider.GetValue();
 
         circulationIntensitySlider.SetValue(circulationIntensitySlider.GetValue());
         orographicEffectSlider.SetValue(orographicEffectSlider.GetValue());
