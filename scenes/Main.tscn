@@ -100,7 +100,6 @@ text = "World map generator"
 align = 1
 
 [node name="Sliders" type="Control" parent="."]
-editor/display_folded = true
 anchor_top = 0.2
 anchor_right = 0.5
 anchor_bottom = 1.0
