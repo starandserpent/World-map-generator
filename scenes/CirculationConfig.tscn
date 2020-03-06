@@ -13,29 +13,25 @@ anchor_right = 1.0
 text = "Circulation Values"
 align = 1
 
-[node name="Exchange Coefficient" parent="." instance=ExtResource( 2 )]
+[node name="Wind Intesity" parent="." instance=ExtResource( 2 )]
 anchor_top = 0.1
 anchor_bottom = 0.1
 
-[node name="Title" parent="Exchange Coefficient" index="0"]
-text = "Exchange Coefficient"
+[node name="Title" parent="Wind Intesity" index="0"]
+text = "Wind Intesity"
 
-[node name="Circulation Octaves" parent="." instance=ExtResource( 2 )]
+[node name="Wind Range" parent="." instance=ExtResource( 2 )]
 anchor_top = 0.2
 anchor_bottom = 0.2
 
-[node name="Title" parent="Circulation Octaves" index="0"]
-text = "Circulation Octaves:"
+[node name="Title" parent="Wind Range" index="0"]
+text = "Wind Range:"
 
-[node name="Circulation Decline" parent="." instance=ExtResource( 2 )]
+[node name="Pressure at sea level" parent="." instance=ExtResource( 2 )]
+editor/display_folded = true
 anchor_top = 0.3
 anchor_bottom = 0.3
 
-[node name="Title" parent="Circulation Decline" index="0"]
-text = "Circulation Decline"
+[editable path="Wind Intesity"]
 
-[editable path="Exchange Coefficient"]
-
-[editable path="Circulation Octaves"]
-
-[editable path="Circulation Decline"]
+[editable path="Wind Range"]

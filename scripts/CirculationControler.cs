@@ -1,64 +1,64 @@
 using Godot;
 public class CirculationControler : Controler{
-    private Slider exchangeCoeficientSlider;
-    private SpinBox exchangeCoeficientBox;
+    private Slider windIntesitySlider;
+    private SpinBox windIntesityBox;
 
-    private Slider circulationOctavesSlider;
-    private SpinBox circulationOctavesBox;
+    private Slider  windRangeSlider;
+    private SpinBox windRangeBox;
 
-    private Slider circulationDeclineSlider;
-    private SpinBox circulationDeclineBox;
+    private Slider pressureAtSeaLevelSlider;
+    private SpinBox pressureAtSeaLevelBox;
     public override void _Ready()
     {
         FindRoot();
 
-        exchangeCoeficientSlider = (Slider)FindNode("Exchange Coefficient").GetChild(1);
-        exchangeCoeficientBox = (SpinBox)FindNode("Exchange Coefficient").GetChild(2);
+        windIntesitySlider = (Slider)FindNode("Wind Intesity").GetChild(1);
+        windIntesityBox = (SpinBox)FindNode("Wind Intesity").GetChild(2);
 
-        circulationOctavesSlider = (Slider)FindNode("Circulation Octaves").GetChild(1);
-        circulationOctavesBox = (SpinBox)FindNode("Circulation Octaves").GetChild(2);
+        windRangeSlider = (Slider)FindNode("Wind Range").GetChild(1);
+        windRangeBox = (SpinBox)FindNode("Wind Range").GetChild(2);
         
-        circulationDeclineSlider = (Slider)FindNode("Circulation Decline").GetChild(1);
-        circulationDeclineBox = (SpinBox)FindNode("Circulation Decline").GetChild(2);
+        pressureAtSeaLevelSlider = (Slider)FindNode("Pressure at sea level").GetChild(1);
+        pressureAtSeaLevelBox = (SpinBox)FindNode("Pressure at sea level").GetChild(2);
 
-        exchangeCoeficientSlider.SetValue(config.circulation.exchange_coefficient);
-        exchangeCoeficientBox.SetValue(config.circulation.exchange_coefficient);
+        windIntesitySlider.SetValue(config.circulation.wind_intensity);
+        windIntesityBox.SetValue(config.circulation.wind_intensity);
 
-        circulationOctavesSlider.SetValue(config.circulation.circulation_octaves);
-        circulationOctavesBox.SetValue(config.circulation.circulation_octaves);
+        windRangeSlider.SetValue(config.circulation.wind_range);
+        windRangeBox.SetValue(config.circulation.wind_range);
 
-        circulationDeclineSlider.SetValue(config.circulation.circulation_decline);
-        circulationDeclineBox.SetValue(config.circulation.circulation_decline);
+        pressureAtSeaLevelSlider.SetValue(config.circulation.pressure_at_sea_level);
+        pressureAtSeaLevelBox.SetValue(config.circulation.pressure_at_sea_level);
 
-        exchangeCoeficientBox.Connect("value_changed", this, "BoxTriggered");
-        circulationOctavesBox.Connect("value_changed", this, "BoxTriggered");
-        circulationDeclineBox.Connect("value_changed", this, "BoxTriggered");
+        windIntesityBox.Connect("value_changed", this, "BoxTriggered");
+        windRangeBox.Connect("value_changed", this, "BoxTriggered");
+        pressureAtSeaLevelBox.Connect("value_changed", this, "BoxTriggered");
 
-        exchangeCoeficientSlider.Connect("value_changed", this, "SliderTriggered");
-        circulationOctavesSlider.Connect("value_changed", this, "SliderTriggered");
-        circulationDeclineSlider.Connect("value_changed", this, "SliderTriggered");
+        windIntesitySlider.Connect("value_changed", this, "SliderTriggered");
+        windRangeSlider.Connect("value_changed", this, "SliderTriggered");
+        pressureAtSeaLevelSlider.Connect("value_changed", this, "SliderTriggered");
     }
 
     public override void BoxTriggered(int value){
-        config.circulation.exchange_coefficient = exchangeCoeficientBox.GetValue();
-        config.circulation.circulation_octaves = (int) circulationOctavesBox.GetValue();
-        config.circulation.circulation_decline = (int) circulationDeclineBox.GetValue();
+        config.circulation.wind_intensity = windIntesityBox.GetValue();
+        config.circulation.wind_range = (int) windRangeBox.GetValue();
+        config.circulation.pressure_at_sea_level = (int) pressureAtSeaLevelBox.GetValue();
 
-        exchangeCoeficientSlider.SetValue(exchangeCoeficientBox.GetValue());
-        circulationOctavesSlider.SetValue(circulationOctavesBox.GetValue());
-        circulationDeclineSlider.SetValue(circulationDeclineBox.GetValue());
+        windIntesitySlider.SetValue(windIntesityBox.GetValue());
+        windRangeSlider.SetValue(windRangeBox.GetValue());
+        pressureAtSeaLevelSlider.SetValue(pressureAtSeaLevelBox.GetValue());
 
         root.Generate();
     }
     
     public override void SliderTriggered(int value){
-        config.circulation.exchange_coefficient = exchangeCoeficientSlider.GetValue();
-        config.circulation.circulation_octaves = (int) circulationOctavesSlider.GetValue();
-        config.circulation.circulation_decline = (int) circulationDeclineSlider.GetValue();
+        config.circulation.wind_intensity = windIntesitySlider.GetValue();
+        config.circulation.wind_range = (int) windRangeSlider.GetValue();
+        config.circulation.pressure_at_sea_level = (int) pressureAtSeaLevelSlider.GetValue();
 
-        exchangeCoeficientBox.SetValue(exchangeCoeficientSlider.GetValue());
-        circulationOctavesBox.SetValue(circulationOctavesSlider.GetValue());
-        circulationDeclineBox.SetValue(circulationDeclineSlider.GetValue());
+        windIntesityBox.SetValue(windIntesitySlider.GetValue());
+        windRangeBox.SetValue(windRangeSlider.GetValue());
+        pressureAtSeaLevelBox.SetValue(pressureAtSeaLevelSlider.GetValue());
 
         root.Generate();
     }

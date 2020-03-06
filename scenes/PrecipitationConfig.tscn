@@ -21,40 +21,18 @@ anchor_bottom = 0.1
 [node name="Title" parent="Circulation intensity" index="0"]
 text = "Circulation intensity:"
 
-[node name="Orographic Effect" parent="." instance=ExtResource( 2 )]
+[node name="Precipitation Intensity" parent="." instance=ExtResource( 2 )]
 editor/display_folded = true
 anchor_top = 0.2
 anchor_bottom = 0.2
 
-[node name="Title" parent="Orographic Effect" index="0"]
-text = "Orographic effect:"
-
-[node name="Precipitation Intensity" parent="." instance=ExtResource( 2 )]
-editor/display_folded = true
-anchor_top = 0.3
-anchor_bottom = 0.3
-
 [node name="Title" parent="Precipitation Intensity" index="0"]
 text = "Precipitation Intensity"
 
-[node name="Iteration" parent="." instance=ExtResource( 2 )]
-editor/display_folded = true
-anchor_top = 0.4
-anchor_bottom = 0.4
-
-[node name="Title" parent="Iteration" index="0"]
-text = "Iteration: "
-
-[node name="Elevation Delta" parent="." instance=ExtResource( 2 )]
-editor/display_folded = true
-
-[node name="Title" parent="Elevation Delta" index="0"]
-text = "Elevation Delta:"
-
 [node name="Max Precipitation" parent="." instance=ExtResource( 2 )]
 editor/display_folded = true
-anchor_top = 0.6
-anchor_bottom = 0.6
+anchor_top = 0.3
+anchor_bottom = 0.3
 
 [node name="Title" parent="Max Precipitation" index="0"]
 text = "Max Precipitation"
@@ -77,13 +55,7 @@ text = "Evaporation:"
 
 [editable path="Circulation intensity"]
 
-[editable path="Orographic Effect"]
-
 [editable path="Precipitation Intensity"]
-
-[editable path="Iteration"]
-
-[editable path="Elevation Delta"]
 
 [editable path="Max Precipitation"]
 

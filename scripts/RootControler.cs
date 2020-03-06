@@ -33,6 +33,7 @@ public class RootControler : Node
 	private PackedScene temperatureConfig;
 	private PackedScene circulationConfig;
 	private PackedScene precipitationConfig;
+	private PackedScene humidityConfig;
 
 	private Node parent;
 	private Config config;
@@ -65,6 +66,7 @@ public class RootControler : Node
 		noiseConfig = (PackedScene) ResourceLoader.Load("res://scenes/NoiseConfig.tscn");
 		temperatureConfig = (PackedScene) ResourceLoader.Load("res://scenes/TemperatureConfig.tscn");
 		circulationConfig = (PackedScene) ResourceLoader.Load("res://scenes/CirculationConfig.tscn");
+		humidityConfig = (PackedScene) ResourceLoader.Load("res://scenes/HumidityConfig.tscn");
 		precipitationConfig = (PackedScene) ResourceLoader.Load("res://scenes/PrecipitationConfig.tscn");
 
 		canvas = (TextureRect) FindNode("MapImage");
@@ -87,8 +89,10 @@ public class RootControler : Node
 		maps.AddItem("General", 0);
 		maps.AddItem("Noise", 1);
 		maps.AddItem("Temperature", 2);
-		maps.AddItem("Circulation", 3);
-		maps.AddItem("Precipitation", 4);
+		maps.AddItem("Humidity", 3);
+		maps.AddItem("Circulation", 4);
+		maps.AddItem("Precipitation", 5);
+
 
 		maps.Connect("item_selected", this, nameof(SelectMap));
 		save.Connect("pressed", this, nameof(SaveDialog));
@@ -182,14 +186,20 @@ public class RootControler : Node
 				GenerateTemperatureMap();
 				break;
 			case 3:
-				parent.AddChild(circulationConfig.Instance());
-				GenerateCirculationMap();
+				parent.AddChild(humidityConfig.Instance());
+				GenerateEvapotranspirationMap();
 				break;
 			case 4:
+				parent.AddChild(circulationConfig.Instance());
+				GenerateHumidityMap();
+				break;    
+			case 5:		
 				parent.AddChild(precipitationConfig.Instance());
 				GeneratePrecipitationMap();
-				break;    
+				break;
 		}
+
+		//GenerateDensityMap();
 
 		map.Unlock();
 		stopwatch.Stop();
@@ -221,8 +231,7 @@ public class RootControler : Node
 		double elevation = weltschmerz.GetElevation(x, y);
 		double temperature = weltschmerz.GetTemperature(y, elevation);
 
-		System.Numerics.Vector2 airFlow = weltschmerz.GetAirFlow(x, y);
-		double precipitation = weltschmerz.GetPrecipitation(x, y, elevation, temperature, airFlow);
+		double precipitation = weltschmerz.GetPrecipitation(x, y, elevation, temperature);
 		precipitationValues.Add((int)precipitation);
 
 		precipitation = (biomMap.GetWidth() * precipitation)/biomMap.GetHeight();
@@ -253,41 +262,57 @@ public class RootControler : Node
 					float elevation = (float)weltschmerz.GetElevation(x, y);
 					map.SetPixel(x, y, new Color(elevation, elevation, elevation, 1f));
 				}else{
-					float elevation = ((float)weltschmerz.GetElevation(x, y) + 1)/2;
+					float elevation = (float)weltschmerz.GetElevation(x, y)/(config.noise.max_elevation - config.noise.min_elevation);
 					map.SetPixel(x, y, new Color(elevation, elevation, elevation, 1f));
 				}
 			}
 		}
 	}
 
+
 	private void GenerateDensityMap(){
-		List<double> elevations = new List<double>();
 		bool earth = useEarth.IsPressed();
 		for(int x = 0; x < config.map.longitude; x++){
 			for(int y = 0; y < config.map.latitude; y ++){
-				double density = weltschmerz.CirculationGenerator.CalculateDensity(x, y);
-				map.SetPixel(x, y, new Color(0, 0, (float) density/834529, 1f));
+				float pressure = (float)(weltschmerz.CirculationGenerator.GetAirPressure(x, y)/1000000);
+				map.SetPixel(x, y, new Color(0, pressure, 0, 1f));
 			}
 		}
 	}
 
-
 	private void GenerateTemperatureMap(){
+		List<double> temperatureValues = new List<double>();
 		float minTemperature = Math.Abs(config.temperature.min_temperature);
 		float maxTemperature = minTemperature + config.temperature.max_temperature;
 		for(int x = 0; x < config.map.longitude; x++){
 			for(int y = 0; y < config.map.latitude; y ++){
+				temperatureValues.Add(weltschmerz.GetTemperature(x, y));
 				float temperature = ((float)weltschmerz.GetTemperature(x, y) + minTemperature)/maxTemperature;
 				map.SetPixel(x, y, new Color(temperature, 0, 0, 1f));
 			}
 		}
+		Godot.GD.Print("Max temperature: " + temperatureValues.Max());
+		Godot.GD.Print("Average temperature: " + temperatureValues.Average());
 	}
 
-	private void GenerateCirculationMap(){
+	private void GenerateEvapotranspirationMap(){
+		float minTemperature = Math.Abs(config.temperature.min_temperature);
+		float maxTemperature = minTemperature + config.temperature.max_temperature;
+			for(int y = 0; y < config.map.latitude; y ++){
+				for(int x = 0; x < config.map.longitude; x++){
+					double elevation = weltschmerz.NoiseGenerator.GetNoise(x, y);
+					float moisture = (float) weltschmerz.PrecipitationGenerator.GetEvapotranspiration(y, WeltschmerzUtils.IsLand(elevation))/config.precipitation.max_precipitation;
+					map.SetPixel(x, y, new Color(0, 0, moisture, 1f));
+			}
+		}
+	}
+
+	private void GenerateHumidityMap(){
 		for(int x = 0; x < config.map.longitude; x++){
 			for(int y = 0; y < config.map.latitude; y ++){
-				System.Numerics.Vector2 circulation = weltschmerz.GetAirFlow(x, y);
-				map.SetPixel(x, y, new Color(circulation.X/10, circulation.Y/10, 0, 1f));
+				double elevation = weltschmerz.NoiseGenerator.GetNoise(x, y);
+				float humidity = (float)weltschmerz.PrecipitationGenerator.GetHumidity(x, y, elevation)/config.precipitation.max_precipitation;
+				map.SetPixel(x, y, new Color(0, 0, humidity, 1f));
 			}
 		}
 	}
