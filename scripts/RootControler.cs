@@ -160,6 +160,7 @@ public class RootControler : Node
 			config.map.longitude = map.GetWidth();
 
 			ImageNoiseGenerator generator = new ImageNoiseGenerator(map, config);
+			weltschmerz.TemperatureGenerator = new Temperature(config);
 			weltschmerz.NoiseGenerator = generator;
 		}else{
 			Noise noise = new Noise(config);
@@ -225,24 +226,31 @@ public class RootControler : Node
 	}
 
 	private void GenerateBiomMap(){
+
 		for(int x = 0; x < config.map.longitude; x++){
 			for(int y = 0; y < config.map.latitude; y ++){
 		
 		double elevation = weltschmerz.GetElevation(x, y);
 		double temperature = weltschmerz.GetTemperature(y, elevation);
 
-		double precipitation = weltschmerz.GetPrecipitation(x, y, elevation, temperature);
+		double precipitation = weltschmerz.GetPrecipitation(x, y, elevation, temperature)/4;
 		precipitationValues.Add((int)precipitation);
 
 		precipitation = (biomMap.GetWidth() * precipitation)/biomMap.GetHeight();
 
-		temperature = (biomMap.GetHeight()*((temperature + Math.Abs(config.temperature.min_temperature)) 
-		* (biomMap.GetWidth()/(config.temperature.max_temperature + Math.Abs(config.temperature.min_temperature)))))/biomMap.GetWidth();
-		precipitation = Math.Min(Math.Max(precipitation, 0), biomMap.GetHeight() - 1);
-		temperature =  Math.Min(Math.Max(temperature, 0), biomMap.GetWidth() - 1);
+	//	Godot.GD.Print(temperature);
 
-		int posY = (int) Math.Min(precipitation, temperature);
-		int posX = (int)temperature;
+		temperature = temperature/config.temperature.min_temperature;
+		temperature *= biomMap.GetWidth()/4;
+
+		temperature = (biomMap.GetWidth()/4) - temperature;
+
+		//Godot.GD.Print(temperature);
+		temperature =  Math.Min(Math.Max(temperature, 0), biomMap.GetWidth() - 1);
+		precipitation = Math.Min(Math.Max(precipitation, 0), temperature);
+
+		int posY = (int) precipitation;
+		int posX = (int) temperature;
 
 				if(!WeltschmerzUtils.IsLand(elevation)){
 					map.SetPixel(x, y, new Color( 0, 0, 1, 1 ));

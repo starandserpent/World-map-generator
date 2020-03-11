@@ -26,7 +26,3 @@ window/size/width=1280
 [editor_plugins]
 
 enabled=PoolStringArray( "MonoDebuggerQM" )
-
-[rendering]
-
-environment/default_environment="res://default_env.tres"
