@@ -20,12 +20,28 @@ anchor_bottom = 0.1
 [node name="Title" parent="Transpiration" index="0"]
 text = "Transpiration:"
 
+[node name="HSlider" parent="Transpiration" index="1"]
+step = 0.01
+page = 1.0
+
+[node name="SpinBox" parent="Transpiration" index="2"]
+step = 0.01
+page = 1.0
+
 [node name="Evaporation" parent="." instance=ExtResource( 2 )]
 anchor_top = 0.2
 anchor_bottom = 0.2
 
 [node name="Title" parent="Evaporation" index="0"]
 text = "Evaporation:"
+
+[node name="HSlider" parent="Evaporation" index="1"]
+step = 0.01
+page = 1.0
+
+[node name="SpinBox" parent="Evaporation" index="2"]
+step = 0.01
+page = 1.0
 
 [editable path="Transpiration"]
 

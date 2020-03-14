@@ -13,7 +13,7 @@ public class ImageElevationGenerator : ElevationGenerator {
     }
 
     public override bool IsLand(double elevation){
-        return elevation > 0;
+        return elevation > config.elevation.water_level;
     }
 
     public override void ChangeConfig(Config config){}

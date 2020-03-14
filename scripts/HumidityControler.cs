@@ -15,11 +15,11 @@ public class HumidityControler : Controler {
 		evaporationSlider = (Slider) FindNode ("Evaporation").GetChild (1);
 		evaporationBox = (SpinBox) FindNode ("Evaporation").GetChild (2);
 
-		transpirationSlider.SetValue (config.humidity.transpiration);
-		transpirationBox.SetValue (config.humidity.transpiration);
+		transpirationSlider.Value = config.humidity.transpiration;
+		transpirationBox.Value = config.humidity.transpiration;
 
-		evaporationSlider.SetValue (config.humidity.evaporation);
-		evaporationBox.SetValue (config.humidity.evaporation);
+		evaporationSlider.Value = config.humidity.evaporation;
+		evaporationBox.Value = config.humidity.evaporation;
 
 		transpirationBox.Connect ("value_changed", this, "BoxTriggered");
 		evaporationBox.Connect ("value_changed", this, "BoxTriggered");
@@ -29,21 +29,21 @@ public class HumidityControler : Controler {
 	}
 
 	public override void BoxTriggered (int value) {
-		config.humidity.transpiration = transpirationBox.GetValue ();
-		config.humidity.evaporation = evaporationBox.GetValue ();
+		config.humidity.transpiration = transpirationBox.Value;
+		config.humidity.evaporation = evaporationBox.Value;
 
-		transpirationSlider.SetValue (transpirationBox.GetValue ());
-		evaporationSlider.SetValue (evaporationBox.GetValue ());
+		transpirationSlider.Value = transpirationBox.Value;
+		evaporationSlider.Value = evaporationBox.Value;
 
 		root.Generate ();
 	}
 
 	public override void SliderTriggered (int value) {
-		config.humidity.transpiration = transpirationSlider.GetValue ();
-		config.humidity.evaporation = evaporationSlider.GetValue ();
+		config.humidity.transpiration = transpirationSlider.Value;
+		config.humidity.evaporation = evaporationSlider.Value;
 
-		transpirationSlider.SetValue (transpirationSlider.GetValue ());
-		evaporationSlider.SetValue (evaporationSlider.GetValue ());
+		transpirationSlider.Value = transpirationSlider.Value;
+		evaporationSlider.Value = evaporationSlider.Value;
 
 		root.Generate ();
 	}

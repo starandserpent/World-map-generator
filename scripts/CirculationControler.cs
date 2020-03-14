@@ -20,14 +20,14 @@ public class CirculationControler : Controler {
 		pressureAtSeaLevelSlider = (Slider) FindNode ("Pressure at sea level").GetChild (1);
 		pressureAtSeaLevelBox = (SpinBox) FindNode ("Pressure at sea level").GetChild (2);
 
-		windIntesitySlider.SetValue (config.circulation.wind_intensity);
-		windIntesityBox.SetValue (config.circulation.wind_intensity);
+		windIntesitySlider.Value = config.circulation.wind_intensity;
+		windIntesityBox.Value = config.circulation.wind_intensity;
 
-		windRangeSlider.SetValue (config.circulation.wind_range);
-		windRangeBox.SetValue (config.circulation.wind_range);
+		windRangeSlider.Value = config.circulation.wind_range;
+		windRangeBox.Value = config.circulation.wind_range;
 
-		pressureAtSeaLevelSlider.SetValue (config.circulation.pressure_at_sea_level);
-		pressureAtSeaLevelBox.SetValue (config.circulation.pressure_at_sea_level);
+		pressureAtSeaLevelSlider.Value = config.circulation.pressure_at_sea_level;
+		pressureAtSeaLevelBox.Value = config.circulation.pressure_at_sea_level;
 
 		windIntesityBox.Connect ("value_changed", this, "BoxTriggered");
 		windRangeBox.Connect ("value_changed", this, "BoxTriggered");
@@ -39,25 +39,25 @@ public class CirculationControler : Controler {
 	}
 
 	public override void BoxTriggered (int value) {
-		config.circulation.wind_intensity = (double)windIntesityBox.GetValue ();
-		config.circulation.wind_range = (int) windRangeBox.GetValue ();
-		config.circulation.pressure_at_sea_level = (int) pressureAtSeaLevelBox.GetValue ();
+		config.circulation.wind_intensity = windIntesityBox.Value;
+		config.circulation.wind_range = (int) windRangeBox.Value;
+		config.circulation.pressure_at_sea_level = (int) pressureAtSeaLevelBox.Value;
 
-		windIntesitySlider.SetValue (windIntesityBox.GetValue ());
-		windRangeSlider.SetValue (windRangeBox.GetValue ());
-		pressureAtSeaLevelSlider.SetValue (pressureAtSeaLevelBox.GetValue ());
+		windIntesitySlider.Value = windIntesityBox.Value;
+		windRangeSlider.Value = windRangeBox.Value;
+		pressureAtSeaLevelSlider.Value = pressureAtSeaLevelBox.Value;
 
 		root.Generate ();
 	}
 
 	public override void SliderTriggered (int value) {
-		config.circulation.wind_intensity = windIntesitySlider.GetValue ();
-		config.circulation.wind_range = (int) windRangeSlider.GetValue ();
-		config.circulation.pressure_at_sea_level = (int) pressureAtSeaLevelSlider.GetValue ();
+		config.circulation.wind_intensity = windIntesitySlider.Value;
+		config.circulation.wind_range = (int) windRangeSlider.Value;
+		config.circulation.pressure_at_sea_level = (int) pressureAtSeaLevelSlider.Value;
 
-		windIntesityBox.SetValue (windIntesitySlider.GetValue ());
-		windRangeBox.SetValue (windRangeSlider.GetValue ());
-		pressureAtSeaLevelBox.SetValue (pressureAtSeaLevelSlider.GetValue ());
+		windIntesityBox.Value = windIntesitySlider.Value;
+		windRangeBox.Value = windRangeSlider.Value;
+		pressureAtSeaLevelBox.Value = pressureAtSeaLevelSlider.Value;
 
 		root.Generate ();
 	}

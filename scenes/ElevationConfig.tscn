@@ -24,6 +24,10 @@ anchor_bottom = 0.1
 [node name="Label" parent="Max elevation" index="0"]
 text = "Max elevation:"
 
+[node name="SpinBox" parent="Max elevation" index="1"]
+min_value = -10000.0
+max_value = 10000.0
+
 [node name="Min elevation" parent="." instance=ExtResource( 2 )]
 anchor_top = 0.2
 anchor_bottom = 0.2
@@ -31,12 +35,20 @@ anchor_bottom = 0.2
 [node name="Label" parent="Min elevation" index="0"]
 text = "Min elevation"
 
+[node name="SpinBox" parent="Min elevation" index="1"]
+min_value = -10000.0
+max_value = 10000.0
+
 [node name="WaterLevel" parent="." instance=ExtResource( 2 )]
 anchor_top = 0.3
 anchor_bottom = 0.3
 
 [node name="Label" parent="WaterLevel" index="0"]
 text = "Water Level"
+
+[node name="SpinBox" parent="WaterLevel" index="1"]
+min_value = -10000.0
+max_value = 10000.0
 
 [node name="Frequency" parent="." instance=ExtResource( 3 )]
 anchor_top = 0.4
@@ -46,10 +58,28 @@ anchor_bottom = 0.4
 text = "Frequency"
 
 [node name="HSlider" parent="Frequency" index="1"]
-max_value = 5.0
+max_value = 10.0
+step = 0.01
+page = 1.0
 
 [node name="SpinBox" parent="Frequency" index="2"]
-max_value = 5.0
+max_value = 10.0
+step = 0.01
+page = 1.0
+
+[node name="Octaves" parent="." instance=ExtResource( 3 )]
+
+[node name="Title" parent="Octaves" index="0"]
+text = "Octaves"
+
+[node name="HSlider" parent="Octaves" index="1"]
+max_value = 10.0
+step = 1.0
+page = 1.0
+
+[node name="SpinBox" parent="Octaves" index="2"]
+max_value = 10.0
+page = 1.0
 
 [editable path="Max elevation"]
 
@@ -58,3 +88,5 @@ max_value = 5.0
 [editable path="WaterLevel"]
 
 [editable path="Frequency"]
+
+[editable path="Octaves"]

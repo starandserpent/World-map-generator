@@ -20,6 +20,13 @@ anchor_bottom = 0.1
 [node name="Title" parent="Max Temperature" index="0"]
 text = "Max Temperature:"
 
+[node name="HSlider" parent="Max Temperature" index="1"]
+step = 1.0
+page = 1.0
+
+[node name="SpinBox" parent="Max Temperature" index="2"]
+page = 1.0
+
 [node name="Min Temperature" parent="." instance=ExtResource( 2 )]
 anchor_top = 0.2
 anchor_bottom = 0.2
@@ -27,18 +34,12 @@ anchor_bottom = 0.2
 [node name="Title" parent="Min Temperature" index="0"]
 text = "Min Temperature"
 
-[node name="Temperature decrease" parent="." instance=ExtResource( 2 )]
-anchor_top = 0.3
-anchor_bottom = 0.3
-
-[node name="Title" parent="Temperature decrease" index="0"]
-text = "Temperature decrease"
-
-[node name="HSlider" parent="Temperature decrease" index="1"]
-margin_bottom = 16.0
+[node name="HSlider" parent="Min Temperature" index="1"]
+min_value = -100.0
+max_value = 0.0
+step = 1.0
+page = 1.0
 
 [editable path="Max Temperature"]
 
 [editable path="Min Temperature"]
-
-[editable path="Temperature decrease"]

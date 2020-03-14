@@ -110,7 +110,7 @@ public class RootControler : Node {
 	}
 
 	private void SaveAsDialog () {
-		saveasDialog.SetCurrentDir (currentDirectoryPath);
+		saveasDialog.CurrentDir = currentDirectoryPath;
 		saveasDialog.Show ();
 	}
 
@@ -120,7 +120,7 @@ public class RootControler : Node {
 	}
 
 	private void LoadDialog () {
-		loadDialog.SetCurrentDir (currentDirectoryPath);
+		loadDialog.CurrentDir = currentDirectoryPath;
 		loadDialog.Show ();
 	}
 
@@ -151,7 +151,7 @@ public class RootControler : Node {
 		Stopwatch stopwatch = new Stopwatch ();
 		stopwatch.Start ();
 
-		if (useEarth.IsPressed ()) {
+		if (useEarth.Pressed) {
 			Image map = IOManager.LoadImage (EARTH_IMAGE_PATH);
 			config.map.latitude = map.GetHeight ();
 			config.map.longitude = map.GetWidth ();
@@ -211,14 +211,14 @@ public class RootControler : Node {
 
 		ImageTexture texture = new ImageTexture ();
 		texture.CreateFromImage (map);
-		canvas.SetTexture (texture);
+		canvas.Texture = texture;
 	}
 
 	private void UpdatePath () {
 		if (currentConfigPath.Length - 75 < 0) {
-			pathLabel.SetText (currentConfigPath);
+			pathLabel.Text = currentConfigPath;
 		} else {
-			pathLabel.SetText ("... " + currentConfigPath.Substring (currentConfigPath.Length - 75));
+			pathLabel.Text = ("... " + currentConfigPath.Substring (currentConfigPath.Length - 75));
 		}
 	}
 
@@ -260,7 +260,7 @@ public class RootControler : Node {
 	}
 
 	private void GenerateNoiseMap () {
-		bool earth = useEarth.IsPressed ();
+		bool earth = useEarth.Pressed;
 		for (int x = 0; x < config.map.longitude; x++) {
 			for (int y = 0; y < config.map.latitude; y++) {
 				if (earth) {
@@ -275,7 +275,7 @@ public class RootControler : Node {
 	}
 
 	private void GenerateDensityMap () {
-		bool earth = useEarth.IsPressed ();
+		bool earth = useEarth.Pressed;
 		for (int x = 0; x < config.map.longitude; x++) {
 			for (int y = 0; y < config.map.latitude; y++) {
 				double elevation = weltschmerz.GetElevation (x, y);

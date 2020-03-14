@@ -20,6 +20,9 @@ anchor_bottom = 0.1
 [node name="Label" parent="Seed" index="0"]
 text = "Seed:"
 
+[node name="SpinBox" parent="Seed" index="1"]
+max_value = 1e+11
+
 [node name="Latitude" parent="." instance=ExtResource( 2 )]
 anchor_top = 0.2
 anchor_bottom = 0.2
@@ -27,12 +30,18 @@ anchor_bottom = 0.2
 [node name="Label" parent="Latitude" index="0"]
 text = "Latitude: "
 
+[node name="SpinBox" parent="Latitude" index="1"]
+max_value = 20000.0
+
 [node name="Longitude" parent="." instance=ExtResource( 2 )]
 anchor_top = 0.3
 anchor_bottom = 0.3
 
 [node name="Label" parent="Longitude" index="0"]
 text = "Longitude:"
+
+[node name="SpinBox" parent="Longitude" index="1"]
+max_value = 20000.0
 
 [editable path="Seed"]
 

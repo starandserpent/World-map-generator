@@ -21,14 +21,14 @@ public class PrecipitationControler : Controler {
 		maxPrecipitationSlider = (Slider) FindNode ("Max Precipitation").GetChild (1);
 		maxPrecipitationBox = (SpinBox) FindNode ("Max Precipitation").GetChild (2);
 
-		circulationIntensitySlider.SetValue (config.precipitation.circulation_intensity);
-		circulationIntensityBox.SetValue (config.precipitation.circulation_intensity);
+		circulationIntensitySlider.Value = config.precipitation.circulation_intensity;
+		circulationIntensityBox.Value = config.precipitation.circulation_intensity;
 
-		precipitationIntesitySlider.SetValue (config.precipitation.precipitation_intensity);
-		precipitationIntesityBox.SetValue (config.precipitation.precipitation_intensity);
+		precipitationIntesitySlider.Value = config.precipitation.precipitation_intensity;
+		precipitationIntesityBox.Value = config.precipitation.precipitation_intensity;
 
-		maxPrecipitationSlider.SetValue (config.precipitation.max_precipitation);
-		maxPrecipitationBox.SetValue (config.precipitation.max_precipitation);
+		maxPrecipitationSlider.Value = config.precipitation.max_precipitation;
+		maxPrecipitationBox.Value = config.precipitation.max_precipitation;
 
 		circulationIntensityBox.Connect ("value_changed", this, "BoxTriggered");
 		precipitationIntesityBox.Connect ("value_changed", this, "BoxTriggered");
@@ -40,25 +40,25 @@ public class PrecipitationControler : Controler {
 	}
 
 	public override void BoxTriggered (int value) {
-		config.precipitation.circulation_intensity = circulationIntensityBox.GetValue ();
-		config.precipitation.precipitation_intensity = precipitationIntesityBox.GetValue ();
-		config.precipitation.max_precipitation = (int) maxPrecipitationBox.GetValue ();
+		config.precipitation.circulation_intensity = circulationIntensityBox.Value;
+		config.precipitation.precipitation_intensity = precipitationIntesityBox.Value;
+		config.precipitation.max_precipitation = (int) maxPrecipitationBox.Value ;
 
-		circulationIntensitySlider.SetValue (circulationIntensityBox.GetValue ());
-		precipitationIntesitySlider.SetValue (precipitationIntesityBox.GetValue ());
-		maxPrecipitationSlider.SetValue (maxPrecipitationBox.GetValue ());
+		circulationIntensitySlider.Value = circulationIntensityBox.Value;
+		precipitationIntesitySlider.Value = precipitationIntesityBox.Value;
+		maxPrecipitationSlider.Value = maxPrecipitationBox.Value;
 
 		root.Generate ();
 	}
 
 	public override void SliderTriggered (int value) {
-		config.precipitation.circulation_intensity = circulationIntensitySlider.GetValue ();
-		config.precipitation.precipitation_intensity = precipitationIntesitySlider.GetValue ();
-		config.precipitation.max_precipitation = (int) maxPrecipitationSlider.GetValue ();
+		config.precipitation.circulation_intensity = circulationIntensitySlider.Value;
+		config.precipitation.precipitation_intensity = precipitationIntesitySlider.Value;
+		config.precipitation.max_precipitation = (int) maxPrecipitationSlider.Value;
 
-		circulationIntensitySlider.SetValue (circulationIntensitySlider.GetValue ());
-		precipitationIntesitySlider.SetValue (precipitationIntesitySlider.GetValue ());
-		maxPrecipitationSlider.SetValue (maxPrecipitationSlider.GetValue ());
+		circulationIntensitySlider.Value = circulationIntensitySlider.Value;
+		precipitationIntesitySlider.Value = precipitationIntesitySlider.Value;
+		maxPrecipitationSlider.Value = maxPrecipitationSlider.Value;
 
 		root.Generate ();
 	}
