@@ -15,9 +15,6 @@ public class RootControler : Node {
 	private Label pathLabel;
 	private Image map;
 	private Image biomMap;
-	private List<int> precipitationValues;
-	private List<int> temperatureValues;
-
 	private Button save;
 	private Button load;
 	private Button saveas;
@@ -28,7 +25,7 @@ public class RootControler : Node {
 	private AcceptDialog saveDialog;
 
 	private PackedScene generalConfig;
-	private PackedScene noiseConfig;
+	private PackedScene elevationConfig;
 	private PackedScene temperatureConfig;
 	private PackedScene circulationConfig;
 	private PackedScene precipitationConfig;
@@ -42,8 +39,6 @@ public class RootControler : Node {
 
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready () {
-		precipitationValues = new List<int> ();
-		temperatureValues = new List<int> ();
 
 		currentDirectoryPath = ConfigManager.BASE_CONFIG_FILE_DIRECTORY_PATH;
 		currentConfigPath = ConfigManager.BASE_CONFIG_FILE_PATH;
@@ -61,7 +56,7 @@ public class RootControler : Node {
 
 	private void Init () {
 		generalConfig = (PackedScene) ResourceLoader.Load ("res://scenes/GeneralConfig.tscn");
-		noiseConfig = (PackedScene) ResourceLoader.Load ("res://scenes/ElevationConfig.tscn");
+		elevationConfig = (PackedScene) ResourceLoader.Load ("res://scenes/ElevationConfig.tscn");
 		temperatureConfig = (PackedScene) ResourceLoader.Load ("res://scenes/TemperatureConfig.tscn");
 		circulationConfig = (PackedScene) ResourceLoader.Load ("res://scenes/CirculationConfig.tscn");
 		humidityConfig = (PackedScene) ResourceLoader.Load ("res://scenes/HumidityConfig.tscn");
@@ -157,11 +152,12 @@ public class RootControler : Node {
 			config.map.longitude = map.GetWidth ();
 
 			ImageElevationGenerator generator = new ImageElevationGenerator (map, weltschmerz, config);
-			weltschmerz.TemperatureGenerator = new Temperature (weltschmerz, config);
 			weltschmerz.ElevationGenerator = generator;
+			weltschmerz.Update();
 		} else {
 			Elevation noise = new Elevation (weltschmerz, config);
 			weltschmerz.ElevationGenerator = noise;
+			weltschmerz.Update();
 		}
 
 		map = new Image ();
@@ -173,11 +169,11 @@ public class RootControler : Node {
 		switch (id) {
 			case 0:
 				parent.AddChild (generalConfig.Instance ());
-				GenerateBiomMap ();
+				GenerateBiomeMap ();
 				break;
 			case 1:
-				parent.AddChild (noiseConfig.Instance ());
-				GenerateNoiseMap ();
+				parent.AddChild (elevationConfig.Instance ());
+				GenerateElevationMap ();
 				break;
 			case 2:
 				parent.AddChild (temperatureConfig.Instance ());
@@ -197,17 +193,10 @@ public class RootControler : Node {
 				break;
 		}
 
-		//GenerateDensityMap();
-
 		map.Unlock ();
 		stopwatch.Stop ();
 
 		GD.Print ("Finished in:" + stopwatch.Elapsed.TotalSeconds);
-
-		GD.Print ("Precipitation");
-		GD.Print ("Min " + precipitationValues.Min ());
-		GD.Print ("Max " + precipitationValues.Max ());
-		GD.Print ("Average " + precipitationValues.Average ());
 
 		ImageTexture texture = new ImageTexture ();
 		texture.CreateFromImage (map);
@@ -222,7 +211,7 @@ public class RootControler : Node {
 		}
 	}
 
-	private void GenerateBiomMap () {
+	private void GenerateBiomeMap () {
 
 		for (int x = 0; x < config.map.longitude; x++) {
 			for (int y = 0; y < config.map.latitude; y++) {
@@ -231,18 +220,14 @@ public class RootControler : Node {
 				double temperature = weltschmerz.TemperatureGenerator.GetTemperature (y, elevation);
 
 				double precipitation = weltschmerz.PrecipitationGenerator.GetPrecipitation (x, y, elevation, temperature) / 4;
-				precipitationValues.Add ((int) precipitation);
 
 				precipitation = (biomMap.GetWidth () * precipitation) / biomMap.GetHeight ();
-
-				//	Godot.GD.Print(temperature);
 
 				temperature = temperature / config.temperature.min_temperature;
 				temperature *= biomMap.GetWidth () / 4;
 
 				temperature = (biomMap.GetWidth () / 4) - temperature;
 
-				//Godot.GD.Print(temperature);
 				temperature = Math.Min (Math.Max (temperature, 0), biomMap.GetWidth () - 1);
 				precipitation = Math.Min (Math.Max (precipitation, 0), temperature);
 
@@ -259,17 +244,12 @@ public class RootControler : Node {
 		IOManager.SaveImage ("./", IMAGE_SAVE_NAME, map);
 	}
 
-	private void GenerateNoiseMap () {
+	private void GenerateElevationMap () {
 		bool earth = useEarth.Pressed;
 		for (int x = 0; x < config.map.longitude; x++) {
 			for (int y = 0; y < config.map.latitude; y++) {
-				if (earth) {
-					float elevation = (float) weltschmerz.GetElevation (x, y);
-					map.SetPixel (x, y, new Color (elevation, elevation, elevation, 1f));
-				} else {
-					float elevation = (float) weltschmerz.GetElevation (x, y) / (config.elevation.max_elevation - config.elevation.min_elevation);
-					map.SetPixel (x, y, new Color (elevation, elevation, elevation, 1f));
-				}
+				float elevation = (float) weltschmerz.GetElevation (x, y) / (config.elevation.max_elevation - config.elevation.min_elevation);
+				map.SetPixel (x, y, new Color (elevation, elevation, elevation, 1f));
 			}
 		}
 	}
@@ -286,18 +266,14 @@ public class RootControler : Node {
 	}
 
 	private void GenerateTemperatureMap () {
-		List<double> temperatureValues = new List<double> ();
 		float minTemperature = Math.Abs (config.temperature.min_temperature);
 		float maxTemperature = minTemperature + config.temperature.max_temperature;
 		for (int x = 0; x < config.map.longitude; x++) {
 			for (int y = 0; y < config.map.latitude; y++) {
-				temperatureValues.Add (weltschmerz.GetTemperature (x, y));
 				float temperature = ((float) weltschmerz.GetTemperature (x, y) + minTemperature) / maxTemperature;
 				map.SetPixel (x, y, new Color (temperature, 0, 0, 1f));
 			}
 		}
-		Godot.GD.Print ("Max temperature: " + temperatureValues.Max ());
-		Godot.GD.Print ("Average temperature: " + temperatureValues.Average ());
 	}
 
 	private void GenerateEvapotranspirationMap () {
