@@ -61,7 +61,7 @@ public class RootControler : Node {
 
 	private void Init () {
 		generalConfig = (PackedScene) ResourceLoader.Load ("res://scenes/GeneralConfig.tscn");
-		noiseConfig = (PackedScene) ResourceLoader.Load ("res://scenes/NoiseConfig.tscn");
+		noiseConfig = (PackedScene) ResourceLoader.Load ("res://scenes/ElevationConfig.tscn");
 		temperatureConfig = (PackedScene) ResourceLoader.Load ("res://scenes/TemperatureConfig.tscn");
 		circulationConfig = (PackedScene) ResourceLoader.Load ("res://scenes/CirculationConfig.tscn");
 		humidityConfig = (PackedScene) ResourceLoader.Load ("res://scenes/HumidityConfig.tscn");
@@ -85,7 +85,7 @@ public class RootControler : Node {
 		UpdatePath ();
 
 		maps.AddItem ("General", 0);
-		maps.AddItem ("Noise", 1);
+		maps.AddItem ("Elevation", 1);
 		maps.AddItem ("Temperature", 2);
 		maps.AddItem ("Humidity", 3);
 		maps.AddItem ("Circulation", 4);
