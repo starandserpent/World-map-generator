@@ -8,6 +8,9 @@
 anchor_right = 1.0
 anchor_bottom = 1.0
 script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="Title" type="Label" parent="."]
 anchor_right = 1.0
@@ -28,9 +31,16 @@ anchor_bottom = 0.2
 [node name="Label" parent="Min elevation" index="0"]
 text = "Min elevation"
 
-[node name="Frequency" parent="." instance=ExtResource( 3 )]
+[node name="WaterLevel" parent="." instance=ExtResource( 2 )]
 anchor_top = 0.3
 anchor_bottom = 0.3
+
+[node name="Label" parent="WaterLevel" index="0"]
+text = "Water Level"
+
+[node name="Frequency" parent="." instance=ExtResource( 3 )]
+anchor_top = 0.4
+anchor_bottom = 0.4
 
 [node name="Title" parent="Frequency" index="0"]
 text = "Frequency"
@@ -44,5 +54,7 @@ max_value = 5.0
 [editable path="Max elevation"]
 
 [editable path="Min elevation"]
+
+[editable path="WaterLevel"]
 
 [editable path="Frequency"]
