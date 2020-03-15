@@ -11,7 +11,6 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 EARTH_IMAGE_PATH = "assets/earth1.png"
-USE_EARTH_IMAGE = true
 
 [node name="Menu" type="Control" parent="."]
 anchor_top = 0.05
@@ -87,18 +86,18 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 
 [node name="VBoxContainer" type="VBoxContainer" parent="ScrollContainer"]
-margin_right = 2160.0
-margin_bottom = 1080.0
+margin_right = 960.0
+margin_bottom = 480.0
 alignment = 1
 
 [node name="HBoxContainer" type="HBoxContainer" parent="ScrollContainer/VBoxContainer"]
-margin_right = 2160.0
-margin_bottom = 1080.0
+margin_right = 960.0
+margin_bottom = 480.0
 alignment = 1
 
 [node name="MapImage" type="TextureRect" parent="ScrollContainer/VBoxContainer/HBoxContainer"]
-margin_right = 2160.0
-margin_bottom = 1080.0
+margin_right = 960.0
+margin_bottom = 480.0
 texture = ExtResource( 2 )
 
 [node name="Title" type="Label" parent="."]
