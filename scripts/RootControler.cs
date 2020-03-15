@@ -1,12 +1,10 @@
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using Godot;
 
 public class RootControler : Node {
-	[Export] private string BIOME_DISTRIBUTION_PATH = "./assets/Biome_distribution.png";
-	[Export] private string EARTH_IMAGE_PATH = "./assets/earth.png";
+	[Export] private string BIOME_DISTRIBUTION_PATH = "assets/Biome_distribution.png";
+	[Export] private string EARTH_IMAGE_PATH = "assets/earth.png";
 	[Export] private string IMAGE_SAVE_NAME = "map.png";
 	[Export] private bool USE_EARTH_IMAGE = false;
 
@@ -19,6 +17,7 @@ public class RootControler : Node {
 	private Button load;
 	private Button saveas;
 	private CheckBox useEarth;
+
 	private OptionButton maps;
 	private FileDialog loadDialog;
 	private FileDialog saveasDialog;

@@ -3,7 +3,7 @@ using Godot;
 public class IOManager {
     public static Image LoadImage (string path) {
         Image image = new Image ();
-        image.Load (path);
+        image = (Image) GD.Load (path);
         return image;
     }
 

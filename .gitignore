@@ -3,3 +3,8 @@
 /.mono/
 /.vs/
 *.import
+*.cfg
+*.zip
+*.exe
+*.x86_64
+*.pck
