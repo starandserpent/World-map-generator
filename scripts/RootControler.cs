@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using Godot;
 
@@ -7,6 +8,7 @@ public class RootControler : Node {
 	[Export] private string EARTH_IMAGE_PATH = "assets/earth.png";
 	[Export] private string IMAGE_SAVE_NAME = "map.png";
 	[Export] private bool USE_EARTH_IMAGE = false;
+	[Export] private int THREADS = 4;
 
 	private Weltschmerz weltschmerz;
 	private TextureRect canvas;
@@ -23,6 +25,7 @@ public class RootControler : Node {
 	private FileDialog saveasDialog;
 	private AcceptDialog saveDialog;
 
+	//Scenes with configuration
 	private PackedScene generalConfig;
 	private PackedScene elevationConfig;
 	private PackedScene temperatureConfig;
@@ -35,6 +38,8 @@ public class RootControler : Node {
 
 	private String currentConfigPath;
 	private String currentDirectoryPath;
+
+	private Thread generationThread;
 
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready () {
@@ -136,14 +141,16 @@ public class RootControler : Node {
 	}
 
 	private void SelectMap (int id) {
+
+		if (generationThread != null) {
+			generationThread.WaitToFinish ();
+		}
+
 		foreach (Node node in parent.GetChildren ()) {
 			if (node.Name.Equals ("Children")) {
 				parent.RemoveChild (node);
 			}
 		}
-
-		Stopwatch stopwatch = new Stopwatch ();
-		stopwatch.Start ();
 
 		if (useEarth.Pressed) {
 			Image map = IOManager.LoadImage (EARTH_IMAGE_PATH);
@@ -152,49 +159,80 @@ public class RootControler : Node {
 
 			ImageElevationGenerator generator = new ImageElevationGenerator (map, weltschmerz, config);
 			weltschmerz.ElevationGenerator = generator;
-			weltschmerz.Update();
+			weltschmerz.Update ();
 		} else {
 			Elevation noise = new Elevation (weltschmerz, config);
 			weltschmerz.ElevationGenerator = noise;
-			weltschmerz.Update();
+			weltschmerz.Update ();
 		}
 
 		map = new Image ();
 		map.Create (config.map.longitude, config.map.latitude, false, biomMap.GetFormat ());
-		double maxTemperature = Math.Abs (config.temperature.min_temperature) + config.temperature.max_temperature;
-
 		map.Lock ();
+
+		generationThread = new Thread ();
 
 		switch (id) {
 			case 0:
 				parent.AddChild (generalConfig.Instance ());
-				GenerateBiomeMap ();
 				break;
 			case 1:
 				parent.AddChild (elevationConfig.Instance ());
-				GenerateElevationMap ();
 				break;
 			case 2:
 				parent.AddChild (temperatureConfig.Instance ());
-				GenerateTemperatureMap ();
 				break;
 			case 3:
 				parent.AddChild (humidityConfig.Instance ());
-				GenerateEvapotranspirationMap ();
 				break;
 			case 4:
 				parent.AddChild (circulationConfig.Instance ());
-				GenerateHumidityMap ();
 				break;
 			case 5:
 				parent.AddChild (precipitationConfig.Instance ());
-				GeneratePrecipitationMap ();
 				break;
 		}
 
-		map.Unlock ();
-		stopwatch.Stop ();
+		generationThread.Start (this, nameof (InitThreads), id);
+	}
 
+	private void InitThreads (int id) {
+		List<Thread> threads = new List<Thread> ();
+		Stopwatch stopwatch = new Stopwatch ();
+		stopwatch.Start ();
+
+		for (int t = 1; t < THREADS; t++) {
+			Thread thread = new Thread ();
+			threads.Add (thread);
+			switch (id) {
+				case 0:
+					thread.Start (this, nameof (GenerateBiomeMap), t);
+					break;
+				case 1:
+					thread.Start (this, nameof (GenerateElevationMap), t);
+					break;
+				case 2:
+					thread.Start (this, nameof (GenerateTemperatureMap), t);
+					break;
+				case 3:
+					thread.Start (this, nameof (GenerateEvapotranspirationMap), t);
+					break;
+				case 4:
+					thread.Start (this, nameof (GenerateHumidityMap), t);
+					break;
+				case 5:
+					thread.Start (this, nameof (GeneratePrecipitationMap), t);
+					break;
+			}
+		}
+
+		foreach (Thread thread in threads) {
+			thread.WaitToFinish ();
+		}
+
+		map.Unlock ();
+
+		stopwatch.Stop ();
 		GD.Print ("Finished in:" + stopwatch.Elapsed.TotalSeconds);
 
 		ImageTexture texture = new ImageTexture ();
@@ -210,15 +248,16 @@ public class RootControler : Node {
 		}
 	}
 
-	private void GenerateBiomeMap () {
-
-		for (int x = 0; x < config.map.longitude; x++) {
+	private void GenerateBiomeMap (int t) {
+		int width = config.map.longitude / THREADS;
+		for (int x = 0; x < width; x++) {
+			int posX = x + (width * t);
 			for (int y = 0; y < config.map.latitude; y++) {
 
-				double elevation = weltschmerz.GetElevation (x, y);
+				double elevation = weltschmerz.GetElevation (posX, y);
 				double temperature = weltschmerz.TemperatureGenerator.GetTemperature (y, elevation);
 
-				double precipitation = weltschmerz.PrecipitationGenerator.GetPrecipitation (x, y, elevation, temperature) / 4;
+				double precipitation = weltschmerz.PrecipitationGenerator.GetPrecipitation (posX, y, elevation, temperature) / 4;
 
 				precipitation = (biomMap.GetWidth () * precipitation) / biomMap.GetHeight ();
 
@@ -230,78 +269,83 @@ public class RootControler : Node {
 				temperature = Math.Min (Math.Max (temperature, 0), biomMap.GetWidth () - 1);
 				precipitation = Math.Min (Math.Max (precipitation, 0), temperature);
 
-				int posY = (int) precipitation;
-				int posX = (int) temperature;
-
 				if (!weltschmerz.ElevationGenerator.IsLand (elevation)) {
-					map.SetPixel (x, y, new Color (0, 0, 1, 1));
+					map.SetPixel (posX, y, new Color (0, 0, 1, 1));
 				} else {
-					map.SetPixel (x, y, biomMap.GetPixel (posX, posY));
+					map.SetPixel (posX, y, biomMap.GetPixel ((int) temperature, (int) precipitation));
 				}
 			}
 		}
 		IOManager.SaveImage ("./", IMAGE_SAVE_NAME, map);
 	}
 
-	private void GenerateElevationMap () {
-		bool earth = useEarth.Pressed;
-		for (int x = 0; x < config.map.longitude; x++) {
+	private void GenerateElevationMap (int t) {
+		int width = config.map.longitude / THREADS;
+		for (int x = 0; x < width; x++) {
+			int posX = x + (width * t);
 			for (int y = 0; y < config.map.latitude; y++) {
-				float elevation = (float) weltschmerz.GetElevation (x, y) / (config.elevation.max_elevation - config.elevation.min_elevation);
-				map.SetPixel (x, y, new Color (elevation, elevation, elevation, 1f));
+				float elevation = (float) weltschmerz.GetElevation (posX, y) / (config.elevation.max_elevation - config.elevation.min_elevation);
+				map.SetPixel (posX, y, new Color (elevation, elevation, elevation, 1f));
 			}
 		}
 	}
 
-	private void GenerateDensityMap () {
-		bool earth = useEarth.Pressed;
-		for (int x = 0; x < config.map.longitude; x++) {
+	private void GenerateDensityMap (int t) {
+		int width = config.map.longitude / THREADS;
+		for (int x = 0; x < width; x++) {
+			int posX = x + (width * t);
 			for (int y = 0; y < config.map.latitude; y++) {
-				double elevation = weltschmerz.GetElevation (x, y);
-				float pressure = (float) (weltschmerz.CirculationGenerator.GetAirPressure (x, y, elevation) / 1000000);
-				map.SetPixel (x, y, new Color (0, pressure, 0, 1f));
+				double elevation = weltschmerz.GetElevation (posX, y);
+				float pressure = (float) (weltschmerz.CirculationGenerator.GetAirPressure (posX, y, elevation) / 1000000);
+				map.SetPixel (posX, y, new Color (0, pressure, 0, 1f));
 			}
 		}
 	}
 
-	private void GenerateTemperatureMap () {
+	private void GenerateTemperatureMap (int t) {
+		int width = config.map.longitude / THREADS;
 		float minTemperature = Math.Abs (config.temperature.min_temperature);
 		float maxTemperature = minTemperature + config.temperature.max_temperature;
-		for (int x = 0; x < config.map.longitude; x++) {
-			for (int y = 0; y < config.map.latitude; y++) {
-				float temperature = ((float) weltschmerz.GetTemperature (x, y) + minTemperature) / maxTemperature;
-				map.SetPixel (x, y, new Color (temperature, 0, 0, 1f));
+		for (int x = 0; x < width; x++) {
+			int posX = x + (width * t);
+			for (int y = 0; y <  config.map.latitude; y++) {
+				float temperature = ((float) weltschmerz.GetTemperature (posX, y) + minTemperature) / maxTemperature;
+				map.SetPixel (posX, y, new Color (temperature, 0, 0, 1f));
 			}
 		}
 	}
 
-	private void GenerateEvapotranspirationMap () {
-		float minTemperature = Math.Abs (config.temperature.min_temperature);
-		float maxTemperature = minTemperature + config.temperature.max_temperature;
-		for (int y = 0; y < config.map.latitude; y++) {
-			for (int x = 0; x < config.map.longitude; x++) {
-				double elevation = weltschmerz.GetElevation (x, y);
+	private void GenerateEvapotranspirationMap (int t) {
+		int width = config.map.longitude / THREADS;
+		for (int x = 0; x < width; x++) {
+			int posX = x + (width * t);
+			for (int y = 0; y < config.map.latitude; y++) {
+				double elevation = weltschmerz.GetElevation (posX, y);
 				float moisture = (float) weltschmerz.PrecipitationGenerator.GetEvapotranspiration (y, weltschmerz.ElevationGenerator.IsLand (elevation)) / config.precipitation.max_precipitation;
-				map.SetPixel (x, y, new Color (0, 0, moisture, 1f));
+				map.SetPixel (posX, y, new Color (0, 0, moisture, 1f));
 			}
 		}
 	}
 
-	private void GenerateHumidityMap () {
-		for (int x = 0; x < config.map.longitude; x++) {
+	private void GenerateHumidityMap (int t) {
+		int width = config.map.longitude / THREADS;
+		for (int x = 0; x < width; x++) {
+			int posX = x + (width * t);
 			for (int y = 0; y < config.map.latitude; y++) {
-				double elevation = weltschmerz.GetElevation (x, y);
-				float humidity = (float) weltschmerz.PrecipitationGenerator.GetHumidity (x, y, elevation) / config.precipitation.max_precipitation;
-				map.SetPixel (x, y, new Color (0, 0, humidity, 1f));
+				double elevation = weltschmerz.GetElevation (posX, y);
+				float humidity = (float) weltschmerz.PrecipitationGenerator.GetHumidity (posX, y, elevation) / config.precipitation.max_precipitation;
+				map.SetPixel (posX, y, new Color (0, 0, humidity, 1f));
 			}
 		}
 	}
 
-	private void GeneratePrecipitationMap () {
-		for (int x = 0; x < config.map.longitude; x++) {
+	private void GeneratePrecipitationMap (int t) {
+		int width = config.map.longitude / THREADS;
+		for (int x = 0; x < width; x++) {
+			int posX = x + (width * t);
 			for (int y = 0; y < config.map.latitude; y++) {
-				float precipitation = ((float) weltschmerz.GetPrecipitation (x, y)) / config.precipitation.max_precipitation;
-				map.SetPixel (x, y, new Color (0, 0, precipitation, 1f));
+				float precipitation = ((float) weltschmerz.GetPrecipitation (posX, y)) / config.precipitation.max_precipitation;
+				map.SetPixel (posX, y, new Color (0, 0, precipitation, 1f));
 			}
 		}
 	}
