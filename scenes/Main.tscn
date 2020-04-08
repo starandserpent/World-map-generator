@@ -1,7 +1,13 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://scripts/RootControler.cs" type="Script" id=1]
 [ext_resource path="res://map.png" type="Texture" id=2]
+[ext_resource path="res://scenes/HumidityConfig.tscn" type="PackedScene" id=3]
+[ext_resource path="res://scenes/CirculationConfig.tscn" type="PackedScene" id=4]
+[ext_resource path="res://scenes/GeneralConfig.tscn" type="PackedScene" id=5]
+[ext_resource path="res://scenes/TemperatureConfig.tscn" type="PackedScene" id=6]
+[ext_resource path="res://scenes/ElevationConfig.tscn" type="PackedScene" id=7]
+[ext_resource path="res://scenes/PrecipitationConfig.tscn" type="PackedScene" id=8]
 
 [node name="Root" type="Control"]
 anchor_right = 1.0
@@ -11,7 +17,6 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 EARTH_IMAGE_PATH = "assets/earth1.png"
-THREADS = 4
 
 [node name="Menu" type="Control" parent="."]
 anchor_top = 0.05
@@ -62,14 +67,6 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Maps" type="OptionButton" parent="Menu"]
-anchor_left = 0.35
-anchor_top = 0.5
-anchor_right = 0.4
-anchor_bottom = 0.5
-margin_right = 50.0
-margin_bottom = 10.0
-
 [node name="Path" type="Label" parent="Menu"]
 anchor_left = 0.5
 anchor_top = 0.5
@@ -80,23 +77,23 @@ margin_bottom = 14.0
 text = "Path: "
 valign = 1
 
-[node name="ScrollContainer" type="ScrollContainer" parent="."]
+[node name="Map" type="ScrollContainer" parent="."]
 anchor_left = 0.5
 anchor_top = 0.2
 anchor_right = 1.0
 anchor_bottom = 1.0
 
-[node name="VBoxContainer" type="VBoxContainer" parent="ScrollContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="Map"]
 margin_right = 500.0
 margin_bottom = 250.0
 alignment = 1
 
-[node name="HBoxContainer" type="HBoxContainer" parent="ScrollContainer/VBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="Map/VBoxContainer"]
 margin_right = 500.0
 margin_bottom = 250.0
 alignment = 1
 
-[node name="MapImage" type="TextureRect" parent="ScrollContainer/VBoxContainer/HBoxContainer"]
+[node name="MapImage" type="TextureRect" parent="Map/VBoxContainer/HBoxContainer"]
 margin_right = 500.0
 margin_bottom = 250.0
 texture = ExtResource( 2 )
@@ -108,21 +105,57 @@ grow_horizontal = 2
 grow_vertical = 2
 text = "World map generator"
 align = 1
-
-[node name="Sliders" type="Control" parent="."]
-anchor_top = 0.2
-anchor_right = 0.5
-anchor_bottom = 1.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Title" type="Label" parent="Sliders"]
-anchor_top = 0.05
-anchor_right = 1.0
-anchor_bottom = 0.05
-text = "Sliders for adjusting"
-align = 1
+[node name="Sliders" type="TabContainer" parent="."]
+anchor_top = 0.2
+anchor_right = 0.5
+anchor_bottom = 1.0
+tab_align = 0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="General" parent="Sliders" instance=ExtResource( 5 )]
+margin_left = 4.0
+margin_top = 32.0
+margin_right = -4.0
+margin_bottom = -4.0
+
+[node name="Precipitation" parent="Sliders" instance=ExtResource( 8 )]
+visible = false
+margin_left = 4.0
+margin_top = 32.0
+margin_right = -4.0
+margin_bottom = -4.0
+
+[node name="Circulation" parent="Sliders" instance=ExtResource( 4 )]
+visible = false
+margin_top = -144.0
+margin_right = -8.0
+margin_bottom = -180.0
+
+[node name="Humidity" parent="Sliders" instance=ExtResource( 3 )]
+visible = false
+margin_top = -144.0
+margin_right = -8.0
+margin_bottom = -180.0
+
+[node name="Temperature" parent="Sliders" instance=ExtResource( 6 )]
+visible = false
+margin_left = 4.0
+margin_top = 32.0
+margin_right = -4.0
+margin_bottom = -4.0
+
+[node name="Elevation" parent="Sliders" instance=ExtResource( 7 )]
+visible = false
+margin_left = 4.0
+margin_top = 32.0
+margin_right = -4.0
+margin_bottom = -4.0
 
 [node name="LoadDialog" type="FileDialog" parent="."]
 anchor_left = 0.5
