@@ -18,15 +18,13 @@ public class RootControler : Node {
 	private Button save;
 	private Button load;
 	private Button saveas;
+	private Button generate;
 	private CheckBox useEarth;
-
-	private OptionButton maps;
 	private FileDialog loadDialog;
 	private FileDialog saveasDialog;
 	private AcceptDialog saveDialog;
 
 	//Scenes with configuration
-	private Node parent;
 	private Config config;
 
 	private String currentConfigPath;
@@ -45,16 +43,21 @@ public class RootControler : Node {
 
 		biomMap = IOManager.LoadImage (BIOME_DISTRIBUTION_PATH);
 		biomMap.Lock ();
+
+		Controler controler = (Controler) FindNode("Sliders");
+		controler.Init(config);
+
+		Init();
 	}
 
 	private void Init () {
 		canvas = (TextureRect) FindNode ("MapImage");
 
 		useEarth = (CheckBox) FindNode ("UseEarth");
-		maps = (OptionButton) FindNode ("Maps");
 		save = (Button) FindNode ("Save");
 		saveas = (Button) FindNode ("Save as");
 		load = (Button) FindNode ("Load");
+		generate = (Button) FindNode("Generate");
 		pathLabel = (Label) FindNode ("Path");
 		loadDialog = (FileDialog) FindNode ("LoadDialog");
 		saveasDialog = (FileDialog) FindNode ("SaveAsDialog");
@@ -65,17 +68,11 @@ public class RootControler : Node {
 
 		UpdatePath ();
 
-		maps.AddItem ("General", 0);
-		maps.AddItem ("Elevation", 1);
-		maps.AddItem ("Temperature", 2);
-		maps.AddItem ("Humidity", 3);
-		maps.AddItem ("Circulation", 4);
-		maps.AddItem ("Precipitation", 5);
-
-		maps.Connect ("item_selected", this, nameof (SelectMap));
 		save.Connect ("pressed", this, nameof (SaveDialog));
 		saveas.Connect ("pressed", this, nameof (SaveAsDialog));
 		load.Connect ("pressed", this, nameof (LoadDialog));
+
+		generate.Connect("pressed", this, nameof(Generate));
 
 		loadDialog.Connect ("file_selected", this, nameof (LoadConfig));
 		loadDialog.Connect ("dir_selected", this, nameof (UpdateDirectory));
@@ -83,11 +80,7 @@ public class RootControler : Node {
 		saveasDialog.Connect ("file_selected", this, nameof (SaveConfig));
 		saveasDialog.Connect ("dir_selected", this, nameof (UpdateDirectory));
 
-		parent = FindNode ("Sliders");
-	}
-
-	public void Generate () {
-		SelectMap (maps.Selected);
+		Generate();
 	}
 
 	private void SaveAsDialog () {
@@ -119,19 +112,12 @@ public class RootControler : Node {
 		currentConfigPath = path;
 		config = ConfigManager.GetConfig (path);
 		UpdatePath ();
-		Generate ();
 	}
 
-	private void SelectMap (int id) {
+	public void Generate () {
 
 		if (generationThread != null) {
 			generationThread.WaitToFinish ();
-		}
-
-		foreach (Node node in parent.GetChildren ()) {
-			if (node.Name.Equals ("Children")) {
-				parent.RemoveChild (node);
-			}
 		}
 
 		if (useEarth.Pressed) {
@@ -154,37 +140,18 @@ public class RootControler : Node {
 
 		generationThread = new Thread ();
 
-		generationThread.Start (this, nameof (InitThreads), id);
+		generationThread.Start (this, nameof (InitThreads), 0);
 	}
 
-	private void InitThreads (int id) {
+	public void InitThreads (int id) {
 		List<Thread> threads = new List<Thread> ();
 		Stopwatch stopwatch = new Stopwatch ();
 		stopwatch.Start ();
 
 		for (int t = 1; t < THREADS; t++) {
 			Thread thread = new Thread ();
+			thread.Start(this, nameof(GenerateBiomeMap), t);
 			threads.Add (thread);
-			switch (id) {
-				case 0:
-					thread.Start (this, nameof (GenerateBiomeMap), t);
-					break;
-				case 1:
-					thread.Start (this, nameof (GenerateElevationMap), t);
-					break;
-				case 2:
-					thread.Start (this, nameof (GenerateTemperatureMap), t);
-					break;
-				case 3:
-					thread.Start (this, nameof (GenerateEvapotranspirationMap), t);
-					break;
-				case 4:
-					thread.Start (this, nameof (GenerateHumidityMap), t);
-					break;
-				case 5:
-					thread.Start (this, nameof (GeneratePrecipitationMap), t);
-					break;
-			}
 		}
 
 		foreach (Thread thread in threads) {
