@@ -26,13 +26,6 @@ public class RootControler : Node {
 	private AcceptDialog saveDialog;
 
 	//Scenes with configuration
-	private PackedScene generalConfig;
-	private PackedScene elevationConfig;
-	private PackedScene temperatureConfig;
-	private PackedScene circulationConfig;
-	private PackedScene precipitationConfig;
-	private PackedScene humidityConfig;
-
 	private Node parent;
 	private Config config;
 
@@ -52,20 +45,9 @@ public class RootControler : Node {
 
 		biomMap = IOManager.LoadImage (BIOME_DISTRIBUTION_PATH);
 		biomMap.Lock ();
-
-		Init ();
-
-		Generate ();
 	}
 
 	private void Init () {
-		generalConfig = (PackedScene) ResourceLoader.Load ("res://scenes/GeneralConfig.tscn");
-		elevationConfig = (PackedScene) ResourceLoader.Load ("res://scenes/ElevationConfig.tscn");
-		temperatureConfig = (PackedScene) ResourceLoader.Load ("res://scenes/TemperatureConfig.tscn");
-		circulationConfig = (PackedScene) ResourceLoader.Load ("res://scenes/CirculationConfig.tscn");
-		humidityConfig = (PackedScene) ResourceLoader.Load ("res://scenes/HumidityConfig.tscn");
-		precipitationConfig = (PackedScene) ResourceLoader.Load ("res://scenes/PrecipitationConfig.tscn");
-
 		canvas = (TextureRect) FindNode ("MapImage");
 
 		useEarth = (CheckBox) FindNode ("UseEarth");
@@ -171,27 +153,6 @@ public class RootControler : Node {
 		map.Lock ();
 
 		generationThread = new Thread ();
-
-		switch (id) {
-			case 0:
-				parent.AddChild (generalConfig.Instance ());
-				break;
-			case 1:
-				parent.AddChild (elevationConfig.Instance ());
-				break;
-			case 2:
-				parent.AddChild (temperatureConfig.Instance ());
-				break;
-			case 3:
-				parent.AddChild (humidityConfig.Instance ());
-				break;
-			case 4:
-				parent.AddChild (circulationConfig.Instance ());
-				break;
-			case 5:
-				parent.AddChild (precipitationConfig.Instance ());
-				break;
-		}
 
 		generationThread.Start (this, nameof (InitThreads), id);
 	}

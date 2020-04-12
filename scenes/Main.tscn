@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=2]
+[gd_scene load_steps=10 format=2]
 
 [ext_resource path="res://scripts/RootControler.cs" type="Script" id=1]
 [ext_resource path="res://map.png" type="Texture" id=2]
@@ -8,6 +8,7 @@
 [ext_resource path="res://scenes/TemperatureConfig.tscn" type="PackedScene" id=6]
 [ext_resource path="res://scenes/ElevationConfig.tscn" type="PackedScene" id=7]
 [ext_resource path="res://scenes/PrecipitationConfig.tscn" type="PackedScene" id=8]
+[ext_resource path="res://scripts/Controler.cs" type="Script" id=9]
 
 [node name="Root" type="Control"]
 anchor_right = 1.0
@@ -16,7 +17,6 @@ script = ExtResource( 1 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
-EARTH_IMAGE_PATH = "assets/earth1.png"
 
 [node name="Menu" type="Control" parent="."]
 anchor_top = 0.05
@@ -78,7 +78,7 @@ text = "Path: "
 valign = 1
 
 [node name="Map" type="ScrollContainer" parent="."]
-anchor_left = 0.5
+anchor_left = 0.4
 anchor_top = 0.2
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -111,9 +111,10 @@ __meta__ = {
 
 [node name="Sliders" type="TabContainer" parent="."]
 anchor_top = 0.2
-anchor_right = 0.5
-anchor_bottom = 1.0
+anchor_right = 0.4
+anchor_bottom = 0.75
 tab_align = 0
+script = ExtResource( 9 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -133,15 +134,17 @@ margin_bottom = -4.0
 
 [node name="Circulation" parent="Sliders" instance=ExtResource( 4 )]
 visible = false
-margin_top = -144.0
-margin_right = -8.0
-margin_bottom = -180.0
+margin_left = 4.0
+margin_top = 32.0
+margin_right = -4.0
+margin_bottom = -4.0
 
 [node name="Humidity" parent="Sliders" instance=ExtResource( 3 )]
 visible = false
-margin_top = -144.0
-margin_right = -8.0
-margin_bottom = -180.0
+margin_left = 4.0
+margin_top = 32.0
+margin_right = -4.0
+margin_bottom = -4.0
 
 [node name="Temperature" parent="Sliders" instance=ExtResource( 6 )]
 visible = false
@@ -202,3 +205,24 @@ margin_bottom = 50.0
 window_title = "File Saved"
 resizable = true
 dialog_text = "Configuration was successfully saved to your latest config file."
+
+[node name="Generate" type="Button" parent="."]
+anchor_top = 0.8
+anchor_right = 0.4
+anchor_bottom = 1.0
+text = "Generate"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[editable path="Sliders/General"]
+
+[editable path="Sliders/Precipitation"]
+
+[editable path="Sliders/Circulation"]
+
+[editable path="Sliders/Humidity"]
+
+[editable path="Sliders/Temperature"]
+
+[editable path="Sliders/Elevation"]
