@@ -11,8 +11,8 @@
   * [Cloning project](#cloning-project)
   * [Building project](#building-project)
 * [Usage](#usage)
-  * [As Godot project](as-godot-project)
-  * [As Desktop application](as-desktop-application)
+  * [As a godot project](#as-a-godot-project)
+  * [As a desktop application](#as-a-desktop-application)
 * [License](#license)
 * [Contact](#contact)
   * [Follow us](#follow-us)
@@ -32,7 +32,7 @@ Check [releases](https://github.com/starandserpent/World-map-generator/releases)
 
 ## Getting Started
 
-If you want participate in develepment or if you do not want download latest release version you can follow these instructions to get you a copy of the aplication.
+If you want to participate in a develepment or if you do not want to download last release then follow the instructions to get a copy of the aplication
 
 ### Prerequisites
 
@@ -46,13 +46,11 @@ Make sure you have installed all of the following prerequisites on your developm
 Steps to run apllication in godot engine
 
 1) Clone repository
-Type into command line
 ```
 git clone git@github.com:starandserpent/World-map-generator.git --recursive
 ```
 
 2) Update package references in project folder
-Type into command line
 ```
 nuget restore
 cd modules
@@ -70,15 +68,15 @@ Steps how to build binary version
 4) Download template
 4) Export project
 
-For detailed information see [Godot documentation](https://docs.godotengine.org/en/3.1/getting_started/workflow/export/exporting_projects.html)
+For more detailed information see [Godot documentation](https://docs.godotengine.org/en/3.1/getting_started/workflow/export/exporting_projects.html)
 
 ## Usage
 
-### As Godot project
+### As a godot project
 
 TODO
 
-### As Desktop application
+### As a desktop application
 
 TODO
 
