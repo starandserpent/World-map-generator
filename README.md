@@ -5,6 +5,7 @@
 ## Table of Contents
 
 * [About the Project](#about-the-project)
+* [Releases](#releases)
 * [Getting Started](#getting-started)
   * [Prerequisites](#prerequisites)
   * [Installation](#installation)
@@ -16,48 +17,37 @@
 
 ## About the project
 
-World map generator is standalone GUI interactable application which uses [Weltschmerz](https://github.com/starandserpent/World-map-generator) library to create a realistic 2D world map by simulating real life environmental conditions.
+World map generator is standalone desktop application which uses [Weltschmerz](https://github.com/starandserpent/World-map-generator) library to generate realistically looking biome maps.
 
 ## Releases
 Check [releases](https://github.com/starandserpent/World-map-generator/releases) to download latest version.
 
 ## Getting Started
 
-If you want participate in develepment or if you do not want download release version you can follow these instructions to get you a copy of the aplication.
+If you want participate in develepment or if you do not want download latest release version you can follow these instructions to get you a copy of the aplication.
 
 ### Prerequisites
 
 Make sure you have installed all of the following prerequisites on your development machine:
 
-#### Windows
-
 * *.NET Desktop development* and *Universal Windows Platform Develpment*
-
-#### Linux
-To be added
-
-#### Both
-
+* [Godot Engine](https://godotengine.org/download/windows) (Last application version currently supports Godot version 3.2.1)
 * [Git](https://git-scm.com/downloads) - OSX and Linux machines typically have this already installed.
 
-* Latest [Godot](https://godotengine.org/download/windows) version
-
 ### Cloning project
-A step by step series how to run apllication in godot engine
+Steps to run apllication in godot engine
 
 1) Clone repository
 ```
 git clone git@github.com:starandserpent/World-map-generator.git --recursive
 ```
 
-2) Update package references
+2) Update package references in project folder
 ```
 nuget restore
 ```
 
 3) Open project in godot
-
-4) assets -> reimport every texture as image
 
 ### Building project
 A step by step series how to build binary version
@@ -65,6 +55,12 @@ A step by step series how to build binary version
 2) Project -> Export -> Add -> <your platform>
 3) Download templates
 4) Export project
+
+## Usage
+
+### As Godot Applicatiom
+
+### As Desktop Application
 
 ## Licence
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details

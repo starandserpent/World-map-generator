@@ -192,9 +192,9 @@ public class RootControler : Node {
 
 	private void UpdatePath () {
 		if (currentConfigPath.Length - 75 < 0) {
-			pathLabel.Text = currentConfigPath;
+			pathLabel.Text = "Current configuration path: " + currentConfigPath;
 		} else {
-			pathLabel.Text = ("... " + currentConfigPath.Substring (currentConfigPath.Length - 75));
+			pathLabel.Text = ("Current configuration path:  ... " + currentConfigPath.Substring (currentConfigPath.Length - 75));
 		}
 	}
 
