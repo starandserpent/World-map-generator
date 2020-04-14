@@ -2,17 +2,24 @@
 
 [node name="Edit" type="Control"]
 anchor_right = 1.0
+anchor_bottom = 1.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="Label" type="Label" parent="."]
-anchor_left = 0.3
+anchor_top = 0.5
 anchor_right = 0.4
+anchor_bottom = 0.5
 margin_bottom = 14.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="SpinBox" type="SpinBox" parent="."]
 anchor_left = 0.5
-anchor_right = 0.6
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
 allow_greater = true
 allow_lesser = true

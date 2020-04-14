@@ -13,7 +13,8 @@ align = 1
 
 [node name="Transpiration" parent="." instance=ExtResource( 2 )]
 anchor_top = 0.1
-anchor_bottom = 0.1
+anchor_bottom = 0.15
+hint_tooltip = "Tranpiration determines humidity around landmasses"
 
 [node name="Title" parent="Transpiration" index="0"]
 text = "Transpiration:"
@@ -28,7 +29,8 @@ page = 1.0
 
 [node name="Evaporation" parent="." instance=ExtResource( 2 )]
 anchor_top = 0.2
-anchor_bottom = 0.2
+anchor_bottom = 0.25
+hint_tooltip = "Evaporation determines humidity around oceans"
 
 [node name="Title" parent="Evaporation" index="0"]
 text = "Evaporation:"

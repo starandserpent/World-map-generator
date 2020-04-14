@@ -13,7 +13,8 @@ align = 1
 
 [node name="Max Temperature" parent="." instance=ExtResource( 2 )]
 anchor_top = 0.1
-anchor_bottom = 0.1
+anchor_bottom = 0.15
+hint_tooltip = "Highest temperature located around the equator"
 
 [node name="Title" parent="Max Temperature" index="0"]
 text = "Max Temperature:"
@@ -27,7 +28,8 @@ page = 1.0
 
 [node name="Min Temperature" parent="." instance=ExtResource( 2 )]
 anchor_top = 0.2
-anchor_bottom = 0.2
+anchor_bottom = 0.25
+hint_tooltip = "Lowest temperature located around the poles"
 
 [node name="Title" parent="Min Temperature" index="0"]
 text = "Min Temperature"

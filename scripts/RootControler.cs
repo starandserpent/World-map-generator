@@ -24,6 +24,10 @@ public class RootControler : Node {
 	private FileDialog saveasDialog;
 	private AcceptDialog saveDialog;
 
+	private Control progress;
+
+	private ProgressBar progressBar;
+
 	//Scenes with configuration
 	private Config config;
 
@@ -52,6 +56,12 @@ public class RootControler : Node {
 
 	private void Init () {
 		canvas = (TextureRect) FindNode ("MapImage");
+		progressBar = (ProgressBar) FindNode("ProgressBar");
+		progress = (Control) FindNode("Progress");
+		
+		progressBar.MaxValue = (THREADS * 2) + 3;
+
+		progress.Hide();
 
 		useEarth = (CheckBox) FindNode ("UseEarth");
 		save = (Button) FindNode ("Save");
@@ -116,6 +126,9 @@ public class RootControler : Node {
 
 	public void Generate () {
 
+		progressBar.Value = progressBar.MinValue;
+		progress.Show();
+
 		if (generationThread != null) {
 			generationThread.WaitToFinish ();
 		}
@@ -144,18 +157,23 @@ public class RootControler : Node {
 	}
 
 	public void InitThreads (int id) {
+		progressBar.Value += 1;
 		List<Thread> threads = new List<Thread> ();
 		Stopwatch stopwatch = new Stopwatch ();
 		stopwatch.Start ();
 
-		for (int t = 1; t < THREADS; t++) {
+		for (int t = 0; t < THREADS; t++) {
 			Thread thread = new Thread ();
 			thread.Start(this, nameof(GenerateBiomeMap), t);
 			threads.Add (thread);
+			progressBar.Value += 1;
 		}
+
+		progressBar.Value += 1;
 
 		foreach (Thread thread in threads) {
 			thread.WaitToFinish ();
+			progressBar.Value += 1;
 		}
 
 		map.Unlock ();
@@ -166,6 +184,10 @@ public class RootControler : Node {
 		ImageTexture texture = new ImageTexture ();
 		texture.CreateFromImage (map);
 		canvas.Texture = texture;
+
+		progressBar.Value += 1;
+
+		progress.Hide();
 	}
 
 	private void UpdatePath () {

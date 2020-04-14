@@ -13,7 +13,8 @@ align = 1
 
 [node name="Seed" parent="." instance=ExtResource( 2 )]
 anchor_top = 0.1
-anchor_bottom = 0.1
+anchor_bottom = 0.15
+hint_tooltip = "Seed to generate unique world"
 
 [node name="Label" parent="Seed" index="0"]
 text = "Seed:"
@@ -23,7 +24,12 @@ max_value = 1e+11
 
 [node name="Latitude" parent="." instance=ExtResource( 2 )]
 anchor_top = 0.2
-anchor_bottom = 0.2
+anchor_bottom = 0.25
+hint_tooltip = "Size of the world from south to north
+
+Unit is one voxel or pixel (depends on usage)
+ 
+Distance between voxels or pixels is detemined by engine   "
 
 [node name="Label" parent="Latitude" index="0"]
 text = "Latitude: "
@@ -33,7 +39,13 @@ max_value = 20000.0
 
 [node name="Longitude" parent="." instance=ExtResource( 2 )]
 anchor_top = 0.3
-anchor_bottom = 0.3
+anchor_bottom = 0.35
+hint_tooltip = "
+Size of the world from east to west
+
+Unit is one voxel or pixel (depends on usage)
+
+Distance between voxels or pixels is detemined by engine"
 
 [node name="Label" parent="Longitude" index="0"]
 text = "Longitude:"

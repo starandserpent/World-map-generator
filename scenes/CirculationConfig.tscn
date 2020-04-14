@@ -6,6 +6,9 @@
 [node name="Children" type="Control"]
 anchor_right = 1.0
 anchor_bottom = 1.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="Title" type="Label" parent="."]
 anchor_right = 1.0
@@ -14,7 +17,7 @@ align = 1
 
 [node name="Wind Intesity" parent="." instance=ExtResource( 2 )]
 anchor_top = 0.1
-anchor_bottom = 0.1
+anchor_bottom = 0.15
 
 [node name="Title" parent="Wind Intesity" index="0"]
 text = "Wind Intesity"
@@ -29,21 +32,31 @@ step = 0.01
 
 [node name="Wind Range" parent="." instance=ExtResource( 2 )]
 anchor_top = 0.2
-anchor_bottom = 0.2
+anchor_bottom = 0.25
+hint_tooltip = "Amout of units(pixels) on map which will wind travel
+ 
+The higher map the more units have to wind travel
+
+High range has negative effect on performance"
 
 [node name="Title" parent="Wind Range" index="0"]
 text = "Wind Range:"
 
 [node name="HSlider" parent="Wind Range" index="1"]
-max_value = 1000.0
 step = 1.0
+page = 1.0
 
 [node name="SpinBox" parent="Wind Range" index="2"]
-max_value = 1000.0
+page = 1.0
 
 [node name="Pressure at sea level" parent="." instance=ExtResource( 3 )]
 anchor_top = 0.3
-anchor_bottom = 0.3
+anchor_bottom = 0.35
+hint_tooltip = "Default pressure reference 
+
+Value used mostly in engine
+
+Unit is Pa"
 
 [node name="Label" parent="Pressure at sea level" index="0"]
 text = "Pressure at sea level:"

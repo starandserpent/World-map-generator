@@ -251,9 +251,9 @@ public class Controler : Node {
 		config.precipitation.precipitation_intensity = precipitationIntesitySlider.Value;
 		config.precipitation.max_precipitation = (int) maxPrecipitationSlider.Value;
 
-		circulationIntensitySlider.Value = circulationIntensitySlider.Value;
-		precipitationIntesitySlider.Value = precipitationIntesitySlider.Value;
-		maxPrecipitationSlider.Value = maxPrecipitationSlider.Value;
+		circulationIntensityBox.Value = circulationIntensitySlider.Value;
+		precipitationIntesityBox.Value = precipitationIntesitySlider.Value;
+		maxPrecipitationBox.Value = maxPrecipitationSlider.Value;
 
         //Circulation
 		config.circulation.wind_intensity = windIntesitySlider.Value;
@@ -266,8 +266,8 @@ public class Controler : Node {
         config.humidity.transpiration = transpirationSlider.Value;
 		config.humidity.evaporation = evaporationSlider.Value;
 
-		transpirationSlider.Value = transpirationSlider.Value;
-		evaporationSlider.Value = evaporationSlider.Value;
+		transpirationBox.Value = transpirationSlider.Value;
+		evaporationBox.Value = evaporationSlider.Value;
 
         //Temperature
         config.temperature.max_temperature = (int) maxTemperatureSlider.Value;

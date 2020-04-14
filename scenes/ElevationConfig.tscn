@@ -17,7 +17,9 @@ align = 1
 
 [node name="Max elevation" parent="." instance=ExtResource( 2 )]
 anchor_top = 0.1
-anchor_bottom = 0.1
+anchor_bottom = 0.15
+hint_tooltip = "Max elevation which can terrain achieve
+"
 
 [node name="Label" parent="Max elevation" index="0"]
 text = "Max elevation:"
@@ -27,7 +29,7 @@ max_value = 10000.0
 
 [node name="Min elevation" parent="." instance=ExtResource( 2 )]
 anchor_top = 0.2
-anchor_bottom = 0.2
+anchor_bottom = 0.25
 
 [node name="Label" parent="Min elevation" index="0"]
 text = "Min elevation"
@@ -38,7 +40,7 @@ max_value = 0.0
 
 [node name="Water Level" parent="." instance=ExtResource( 2 )]
 anchor_top = 0.3
-anchor_bottom = 0.3
+anchor_bottom = 0.35
 
 [node name="Label" parent="Water Level" index="0"]
 text = "Water Level"
@@ -49,7 +51,8 @@ max_value = 10000.0
 
 [node name="Frequency" parent="." instance=ExtResource( 3 )]
 anchor_top = 0.4
-anchor_bottom = 0.4
+anchor_bottom = 0.45
+hint_tooltip = "Frequency of noise"
 
 [node name="Title" parent="Frequency" index="0"]
 text = "Frequency"
@@ -65,6 +68,9 @@ step = 0.01
 page = 1.0
 
 [node name="Octaves" parent="." instance=ExtResource( 3 )]
+anchor_top = 0.5
+anchor_bottom = 0.55
+hint_tooltip = "Noise octaves"
 
 [node name="Title" parent="Octaves" index="0"]
 text = "Octaves"
