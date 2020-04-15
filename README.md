@@ -11,8 +11,6 @@
   * [Cloning project](#cloning-project)
   * [Building project](#building-project)
 * [Usage](#usage)
-  * [As a godot project](#as-a-godot-project)
-  * [As a desktop application](#as-a-desktop-application)
 * [License](#license)
 * [Contact](#contact)
   * [Follow us](#follow-us)
@@ -43,7 +41,7 @@ Make sure you have installed all of the following prerequisites on your developm
 * [Git](https://git-scm.com/downloads) - OSX and Linux machines typically have this already installed.
 
 ### Cloning project
-Steps to run apllication in godot engine
+Steps to run the apllication in godot engine
 
 1) Clone repository
 ```
@@ -61,7 +59,7 @@ nuget restore
 3) Import project to godot
 
 ### Building project
-Steps how to build binary version
+Steps to make a project build
 1) Open godot
 2) Project -> Export -> Add -> <your platform>
 3) Click **Manage Export Templates**
@@ -72,13 +70,7 @@ For more detailed information see [Godot documentation](https://docs.godotengine
 
 ## Usage
 
-### As a godot project
-
-TODO
-
-### As a desktop application
-
-TODO
+For usage instructions, please check our [github wiki](https://github.com/starandserpent/World-map-generator/wiki/Usage)
 
 ## Licence
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details

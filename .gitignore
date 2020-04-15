@@ -2,6 +2,7 @@
 /.import/
 /.mono/
 /.vs/
+/build/
 *.import
 *.cfg
 *.zip
